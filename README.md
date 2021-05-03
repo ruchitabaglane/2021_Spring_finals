@@ -38,7 +38,7 @@ Thus, we can accept the alternate hypothesis that the governing body/party has n
 
 Conducting a test to see if the availability of vaccine has had any impact on number of Covid-19 tests being performed.
 
-H0 : Administration of vaccine has impacted the number of Covid-19 tests being conducted(increased or decreased).
+H0 : Administration of vaccine has impacted the number of Covid-19 tests being conducted(increased or decreased).<br>
 HA : Vaccine had no impact on the number of Covid-19 tests being conducted.
 
 Based on the results of the above hypothesis we may further check if the actual number of positive cases increase or decrease after vaccination (Since in India the number of cases has increased even after vaccine distribution)
@@ -47,7 +47,7 @@ Based on the results of the above hypothesis we may further check if the actual 
 
 Does political relations of state producing the vaccine has an impact on the accessibility of vaccine to other states.
 
-H0 : States having good political relations with states producing the vaccine has better accessibility to the vaccine.
+H0 : States having good political relations with states producing the vaccine has better accessibility to the vaccine.<br>
 HA : Accessibility to vaccine in any state is not dependent on the political relations with the state producing the vaccine.
 
 ## Datasets Used
