@@ -45,7 +45,7 @@ Based on the results of the above hypothesis we may further check if the actual 
 
 ## Hypothesis 3
 
-Does political relations of state producing the vaccine has an impact on the accessibility of vaccine to other states.
+Does the political relations of states producing the vaccine have an impact on the accessibility of the vaccine to the other states.
 
 H0 : States having good political relations with states producing the vaccine has better accessibility to the vaccine.<br>
 HA : Accessibility to vaccine in any state is not dependent on the political relations with the state producing the vaccine.
