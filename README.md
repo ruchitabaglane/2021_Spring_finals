@@ -19,8 +19,10 @@ Our project aims to analyze various factors affecting provision of Covid-19 vacc
 Conducting a test to measure the vaccine distribution for states having common government at state and center level VS states having different government at state and center level.
 
 H0 : Distribution of vaccination is better in states having common government at state and center level.
+HA : No effect of governing body/party on the distribution of vaccination.
 
-HA : No effect of governing body/party on the distribution of vaccination
+![image](https://user-images.githubusercontent.com/77983776/116843276-15e1b880-aba5-11eb-9e19-1ed7be9e963b.png)
+
 
 ## Hypothesis 2
 
