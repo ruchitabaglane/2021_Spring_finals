@@ -18,7 +18,7 @@ Our project aims to analyze various factors affecting provision of Covid-19 vacc
 
 Conducting a test to measure the vaccine distribution for states having common government at state and center level VS states having different government at state and center level.
 
-H0 : Distribution of vaccination is better in states having common government at state and center level.
+H0 : Distribution of vaccination is better in states having common government at state and center level. <br>
 HA : No effect of governing body/party on the distribution of vaccination.
 
 We first classified the states based on the political party currently in power. Then we calculated the rate of vaccinations by dividing total number of individuals vaccinated  by total population of states falling under each political party.
@@ -26,10 +26,12 @@ We first classified the states based on the political party currently in power. 
 Below is the plot for each statewise ruling party vs vaccination rate.
 ![image](https://user-images.githubusercontent.com/77983776/116843276-15e1b880-aba5-11eb-9e19-1ed7be9e963b.png)
 
-We then checked the statewise vaccination rates. In the barplot below, each state is coloured to represent the currently ruling party in that state.
+By looking at the first plot, we can say that the states having BJP in power which also the current ruling party in India, have lower vaccination rates. Whereas the states with ruling parties like NCP and SKM have better vaccination rate. Thus, it is not the case that the states with same ruling party as that of the centre have a better vaccination rate. 
+
+For better understanding, we also plotted a bar graph of statewise vaccination rates. Each state is coloured to represent the currently ruling party in that state. It can be observed that even though BJP is in power in most of the states, it has a significantly low vaccination rates in states like Uttar Pradesh, Madhya Pradesh, Bihar, Jharkhand, Assam. Whereas, the parties like SKM and NCP have better vaccination rates in states they are in power.
 ![image](https://user-images.githubusercontent.com/77983776/116843786-a1a81480-aba6-11eb-8260-b35cc8a8a1ae.png)
 
-By looking at the first plot, we can say that the states having BJP in power have lower vaccination rates than the states having NCP and SKM in power. However, from the second barplot it can be observed that most of the ruling party in most of the states is BJP(Coloured in orange) and they don't fare
+Thus, we can accept the alternate hypothesis that the governing body/party has no effect on the distribution of vaccination.
 
 
 ## Hypothesis 2
