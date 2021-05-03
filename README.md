@@ -26,12 +26,12 @@ We first classified the states based on the political party currently in power. 
 Below is the plot for each statewise ruling party vs vaccination rate.
 ![image](https://user-images.githubusercontent.com/77983776/116843276-15e1b880-aba5-11eb-9e19-1ed7be9e963b.png)
 
-By looking at the first plot, we can say that the states having BJP in power which also the current ruling party in India, have lower vaccination rates. Whereas the states with ruling parties like NCP and SKM have better vaccination rate. Thus, it is not the case that the states with same ruling party as that of the centre have a better vaccination rate. 
+By looking at the above plot, we can say that the states having BJP in power which is also the current ruling party in India, have lower vaccination rates. Thus, it is not the case that the states with same ruling party as that of the centre have a better vaccination rate. 
 
 For better understanding, we also plotted a bar graph of statewise vaccination rates. Each state is coloured to represent the currently ruling party in that state. It can be observed that even though BJP is in power in most of the states, it has a significantly low vaccination rates in states like Uttar Pradesh, Madhya Pradesh, Bihar, Jharkhand, Assam. Whereas, the parties like SKM and NCP have better vaccination rates in states they are in power.
 ![image](https://user-images.githubusercontent.com/77983776/116843786-a1a81480-aba6-11eb-8260-b35cc8a8a1ae.png)
 
-Thus, we can accept the alternate hypothesis that the governing body/party has no effect on the distribution of vaccination.
+Thus, we can accept the alternate hypothesis that the governing body/party has no effect on the distribution of vaccination and we need to explore more factors which has an impact on the vaccintions across the states.
 
 
 ## Hypothesis 2
