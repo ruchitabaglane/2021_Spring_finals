@@ -43,6 +43,8 @@ HA : Vaccine had no impact on the number of Covid-19 tests being conducted.
 
 Based on the results of the above hypothesis we may further check if the actual number of positive cases increase or decrease after vaccination (Since in India the number of cases has increased even after vaccine distribution)
 
+![image](https://user-images.githubusercontent.com/77983776/117367621-0655be80-ae88-11eb-9f58-8e4b1decdbed.png)
+
 ## Hypothesis 3
 
 Does the political relations of states producing the vaccine have an impact on the accessibility of the vaccine to the other states.
