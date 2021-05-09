@@ -302,19 +302,36 @@ def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame):
 
 
 def getVaccineTypeCount (vaccinesTypeData : pd.DataFrame):
+    """
+    This function calculates the number of shots administered for each type of vaccine in each state.
+    :param vaccinesTypeData: Dataframe consisting of data for each type of vaccine
+    :return: Dataframe with number of shots administered per vaccine in each state.
+    """
     vaccinesTypeData = vaccinesTypeData.loc[vaccinesTypeData['State'] != 'India']
     vaccineTypeData = vaccinesTypeData.copy()
     groupedVaccineTypeData = vaccineTypeData.groupby('State').agg({'Total Covaxin Administered': 'sum', 'Total CoviShield Administered': 'sum'})
     groupedVaccineTypeData = groupedVaccineTypeData.reset_index()
     return groupedVaccineTypeData
 
-def rank_(grp, col, return_rank = None):
-    if return_rank == None:
+
+def rank_(grp, col, return_rank=None):
+    """
+    This function is used find the rank of the state based on daily distribution of each type of vaccine.
+    :param grp:
+    :param col:
+    :param return_rank:
+    :return:
+    """
+    if return_rank==None:
         return_rank = grp.shape[0]
-    return grp.sort_values(col, ascending  = False).head(return_rank)[['State']]
+    return grp.sort_values(col, ascending=False).head(return_rank)[['State']]
 
 
 def hypothesis3(testingData3: pd.DataFrame):
+    """
+    This function consists of steps required to perform hypothesis 3.
+    :param testingData3: Dataframe consisting of statewise vaccine and test data.
+    """
     print("#########################################################################################################")
     print("                                            HYPOTHESIS 3                                                ")
     print("#########################################################################################################")
@@ -357,8 +374,10 @@ def hypothesis3(testingData3: pd.DataFrame):
         .reset_index().drop('level_1', axis=1)
     covx_top = covx_top_3.drop_duplicates('Updated On', keep='first')
 
-    title_list = ['Top 3 states for covishield distribution', 'Top state for covishield distribution',
-                  'Top 3 states for covaxin distribution', 'Top state for covaxin distribution']
+    title_list = ['No. of Days when state received most daily shares of Coviesheild (State in top 3)',\
+                  'No. of Days when state received most daily shares of Coviesheild (State tops the list)',\
+                  'No. of Days when state received most daily shares of Covaxin (State in top 3)',\
+                  'No. of Days when state received most daily shares of Covaxin (State tops the list)']
     i = 0
 
     for df in [covis_top_3, covis_top, covx_top_3, covx_top]:
@@ -369,14 +388,16 @@ def hypothesis3(testingData3: pd.DataFrame):
             title={
                 'text': title_list[i],
                 'y': 0.9,
-                'x': 0.4,
+                'x': 0.5,
                 'xanchor': 'center',
                 'yanchor': 'top'}
         )
         i = i + 1
         fig.show()
 
+
 if __name__ == '__main__':
+
     #Loading all the input files for Hypothesis 1
     stateElections = pd.read_csv("./StateElectionData.csv")
     stateVaccinations = pd.read_csv("./covid_vaccine_statewise.csv")
@@ -391,7 +412,6 @@ if __name__ == '__main__':
 
     # Performing analysis for Hypothesis 1
     stateGovt = hypothesis1(stateElections, stateVaccinations, statePopulation)
-
 
     # Loading all the input files for Hypothesis 2
     stateTesting = pd.read_csv("./statewise_tested_numbers_data.csv")
