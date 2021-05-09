@@ -1,7 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import calendar
+from numerize import numerize
 import plotly.graph_objects as go
+import plotly.express as px
+from ipywidgets import interact, widgets
 
 
 def cleanData(dataSet: pd.DataFrame) -> pd.DataFrame:
@@ -11,10 +15,9 @@ def cleanData(dataSet: pd.DataFrame) -> pd.DataFrame:
     :return: Dataframe with appropriate transformations.
     """
     dataSet_copy = dataSet.copy()
-    dataSet_copy['State'].replace({"Jammu and Kashmir": "Jammu & Kashmir", "NCT OF Delhi": "Delhi", \
-                                   "Dadra and Nagar Haveli and Daman and Diu": "Dadra & Nagar Haveli and Daman & Diu", \
-                                   "Andaman and Nicobar Islands": "Andaman & Nicobar Islands", \
-                                   "A.& N.Islands": "Andaman & Nicobar Islands"}, inplace=True)
+    mapper = pd.read_csv('mapper.csv')
+    dataSet_copy['State'].replace(to_replace=mapper.to_replace.tolist(),
+                                  value=mapper.value.tolist(), inplace=True)
 
     return dataSet_copy
 
@@ -25,12 +28,13 @@ def getStateGovernments(stateElect: pd.DataFrame) -> pd.DataFrame:
     :param stateElect: Dataframe with election data
     :return: Dataframe with states and the corresponding political party in power.
     """
-    groupByStateParty = stateElect.groupby(['State', 'Party']).agg({'Votes': 'sum'})
-    groupByStateParty.columns = ['Votes']
-    groupByStateParty = groupByStateParty.reset_index()
-
-    stateRulingParty = groupByStateParty.sort_values(['Votes'], ascending=False)
-    stateRulingParty = stateRulingParty.drop_duplicates(subset=['State'], keep='first')
+    url = 'https://en.wikipedia.org/wiki/List_of_current_Indian_chief_ministers'
+    stateRulingParty = pd.read_html(io=url)[1].iloc[:, [0, 1, 4]]
+    stateRulingParty.columns = ['State', 'Leader', 'Party']
+    stateRulingParty.State = stateRulingParty.State.apply(lambda x: x.split('(')[0]) \
+        .apply(lambda x: x.split('[')[0])
+    stateRulingParty.Party = stateRulingParty.Party.fillna(
+        stateRulingParty.Party.value_counts().index.tolist()[0])
 
     return stateRulingParty
 
@@ -99,7 +103,6 @@ def stateClassificationByRulingParty(stateGovernments: pd.DataFrame, rateOfVacci
     return vaccinationRate_by_rulingParty
 
 
-
 def hypothesis1(electionData, vaccineData, populationData):
     """
     This function consists of all the steps required for Hypothesis 1.
@@ -122,12 +125,31 @@ def hypothesis1(electionData, vaccineData, populationData):
     rateOfVaccination_vs_party = calcRateOfVaccination(stateVaccineRecords, statePopulation, stateGovernments)
 
     # Plotting bar plot for States within each party vs vaccination rate.
-    rateOfVaccination_vs_party[0].plot(x='Party', y='VaccinationRate', kind='bar')
-    plt.title(label="Vaccination Rates per Political Party",
-              fontsize=15)
-    plt.xlabel('Political Parties')
-    plt.ylabel('Vaccination Rates')
-    plt.show()
+    drp_dwn = widgets.Dropdown(value='Total Individuals Vaccinated',
+                               options=[('# vaccinated', 'Total Individuals Vaccinated'),
+                                        ('% vaccinated', 'VaccinationRate')])
+
+    @interact(y=drp_dwn)
+    def plot(y):
+        fig = px.bar(rateOfVaccination_vs_party[0], x='Party', y=y, log_y=True, title='Vaccination per Political Party',
+                     hover_name='Party',
+                     hover_data={'a': [numerize.numerize(x, 0) for x in
+                                       rateOfVaccination_vs_party[0].Population_2019.tolist()],
+                                 'tiv': [numerize.numerize(x, 0) for x in
+                                         rateOfVaccination_vs_party[0]['Total Individuals Vaccinated'].tolist()],
+                                 'vr': [round(x, 2) for x in
+                                        rateOfVaccination_vs_party[0]['VaccinationRate'].tolist()],
+                                 y: False,
+                                 'VaccinationRate': False,
+                                 'Party': False,
+                                 'Population_2019': False},
+                     labels={'a': 'population',
+                             'tiv': '# vaccinated',
+                             'vr': '% vaccinated'},
+                     color='Population_2019',
+                     color_continuous_scale='darkmint')
+        fig.update_layout(plot_bgcolor='white')
+        fig.show()
 
     # Classifying the states by ruling parties.
     vaccinationRate_by_rulingParty = stateClassificationByRulingParty(stateGovernments, rateOfVaccination_vs_party[1])
@@ -152,10 +174,9 @@ def getTestGrouped(testData: pd.DataFrame) -> pd.DataFrame:
     """
     Combines number of tests conducted and positive cases for each day recorded in dataset for every state.
     :param testData: Data frame consisting of the COVID-19 testing data for each state.
-    :return: Dataframe having total number of tests conducted and positive cases for each day recorded.
+    :return: Creates a dataframe having total number of tests conducted and positive cases for each day recorded in
+    India.
     """
-    testData['Updated On'] = pd.to_datetime(testData['Updated On'], infer_datetime_format=True)
-    testData.drop(testData[testData['Updated On'].dt.year != 2021].index, inplace=True)
     testingTotal = testData.groupby(['Updated On']).agg({'Total Tested': 'sum'})
     testingTotal = testingTotal.reset_index()
 
@@ -173,11 +194,55 @@ def getTotalDailyVaccinated(vaccination: pd.DataFrame) -> pd.DataFrame:
     :param vaccination: Dataframe consisting of vaccination records for each state.
     :return: Dataframe having total number of individuals vaccinated for each day recorded.
     """
-    vaccination['Updated On'] = pd.to_datetime(vaccination['Updated On'], infer_datetime_format=True)
-    vaccineCombined = vaccination.groupby(['Updated On']).agg({'Total Individuals Vaccinated': 'sum'})
+    vaccination_ = vaccination.copy()
+    vaccination_['Updated On'] = pd.to_datetime(vaccination_['Updated On'], infer_datetime_format=True)
+    vaccineCombined = vaccination_.groupby(['Updated On']).agg({'Total Individuals Vaccinated': 'sum'})
     vaccineCombined = vaccineCombined.reset_index()
 
     return vaccineCombined
+
+
+def plotHypo2(testingVsVaccinated: pd.DataFrame, title: str):
+    """
+    This functions creates all the three plots required for the hypothesis 2.
+    :param testingVsVaccinated: Dataframe consisting of testing & vaccination details for each date across different states.
+    :param title: String which is used as title of the plots.
+    """
+    fig = go.Figure()
+    if "before" in title:
+        fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Total Tested'],
+                                 mode='lines',
+                                 name='Total Tests Conducted'))
+
+        fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Positive'],
+                                 mode='lines',
+                                 name='Total Positive Cases'))
+
+    else:
+        fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Total Tested'],
+                                 mode='lines',
+                                 name='Total Tests Conducted'))
+
+        fig.add_trace(
+            go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Total Individuals Vaccinated'],
+                       mode='lines',
+                       name='Total Individuals Vaccinated'))
+
+        fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Positive'],
+                                 mode='lines',
+                                 name='Total Positive Cases'))
+    fig.update_layout(
+        title={
+            'text': title,
+            'y': 0.9,
+            'x': 0.4,
+            'xanchor': 'center',
+            'yanchor': 'top'},
+        xaxis_title="Time",
+        yaxis_title="Rates",
+    )
+
+    fig.show()
 
 
 def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame):
@@ -187,24 +252,54 @@ def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame):
     :param testingData: Data frame consisting of the COVID-19 testing data for each state.
     :param vaccinesData: Dataframe consisting of vaccination records for each state.
     """
+
+    print("#########################################################################################################")
+    print("                                            HYPOTHESIS 2                                                 ")
+    print("#########################################################################################################")
+
+    testingData['Updated On'] = pd.to_datetime(testingData['Updated On'], infer_datetime_format=True)
+
+    # Lets first check the trend in COVID-19 testing before vaccinations began.
+    testData = testingData.drop(testingData[testingData['Updated On'].dt.year == 2021].index)
+    testbeforevaccine = getTestGrouped(testData)
+    plotHypo2(testbeforevaccine, "Testing conducted before vaccinations")
+
+    testingData.drop(testingData[testingData['Updated On'].dt.year != 2021].index, inplace = True)
+    # Fetching total number of tests conducted each day across different states.
     testingGrouped = getTestGrouped(testingData)
+    # Fetching total number individuals vaccinated each day across different states.
     vaccineGrouped = getTotalDailyVaccinated(vaccinesData)
 
+    # Merging the testing and vaccination details for creating plot for overall tests conducted after vaccination began.
     testingVsVaccinated = vaccineGrouped.merge(testingGrouped, on='Updated On')
 
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Total Tested'],
-                             mode='lines',
-                             name='Total Tests Conducted'))
+    # Fetching the records for 1st shot of vaccinations only.
+    vaccine_1st_shot = vaccinesData.loc[vaccinesData['Second Dose Administered'] == 0]
+    # Fetching the records for 2nd shot of vaccinations only.
+    vaccine_2nd_shot = vaccinesData.loc[vaccinesData['Second Dose Administered'] != 0]
 
-    fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Total Individuals Vaccinated'],
-                             mode='lines',
-                             name='Total Individuals Vaccinated'))
+    # Fetching total number individuals who got first shot each day across different states.
+    vaccine_1st_grouped = getTotalDailyVaccinated(vaccine_1st_shot)
+    # Fetching total number individuals who got second shot each day across different states.
+    vaccine_2nd_grouped = getTotalDailyVaccinated(vaccine_2nd_shot)
 
-    fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Positive'],
-                             mode='lines',
-                             name='Total Positive Cases'))
-    fig.show()
+    first_shot_date = vaccine_1st_grouped['Updated On'].max()
+    second_shot_date = vaccine_2nd_grouped['Updated On'].min()
+
+    # Fetching the records for tests conducted after 1st shot and before the second shots started.
+    test_after_1st_shot = testingGrouped.loc[testingGrouped['Updated On'] <= first_shot_date]
+    # Fetching the records for tests conducted after 2nd shots were started.
+    test_after_2nd_shot = testingGrouped.loc[testingGrouped['Updated On'] >= second_shot_date]
+
+    # Merging the testing & vaccination details for creating a plot for test conducted after first shot of vaccination.
+    testingVsVaccinated_1st = vaccine_1st_grouped.merge(test_after_1st_shot, on = 'Updated On')
+    # Merging the testing $ vaccination details for creating a plot for test conducted after second shot of vaccination.
+    testingVsVaccinated_2nd = vaccine_2nd_grouped.merge(test_after_2nd_shot, on = 'Updated On')
+
+    # Creating all three plots.
+    plotHypo2(testingVsVaccinated, "No. of individuals vaccinated Vs Tests Conducted")
+    plotHypo2(testingVsVaccinated_1st, "No. of individuals given first shot Vs Tests Conducted after first shot")
+    plotHypo2(testingVsVaccinated_2nd, "No. of individuals given second shot Vs Tests Conducted after second shot")
 
 
 if __name__ == '__main__':
