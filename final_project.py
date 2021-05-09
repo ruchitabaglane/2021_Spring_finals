@@ -28,13 +28,12 @@ def getStateGovernments(stateElect: pd.DataFrame) -> pd.DataFrame:
     :param stateElect: Dataframe with election data
     :return: Dataframe with states and the corresponding political party in power.
     """
-    url = 'https://en.wikipedia.org/wiki/List_of_current_Indian_chief_ministers'
-    stateRulingParty = pd.read_html(io=url)[1].iloc[:, [0, 1, 4]]
-    stateRulingParty.columns = ['State', 'Leader', 'Party']
-    stateRulingParty.State = stateRulingParty.State.apply(lambda x: x.split('(')[0]) \
-        .apply(lambda x: x.split('[')[0])
-    stateRulingParty.Party = stateRulingParty.Party.fillna(
-        stateRulingParty.Party.value_counts().index.tolist()[0])
+    groupByStateParty = stateElect.groupby(['State', 'Party']).agg({'Votes': 'sum'})
+    groupByStateParty.columns = ['Votes']
+    groupByStateParty = groupByStateParty.reset_index()
+
+    stateRulingParty = groupByStateParty.sort_values(['Votes'], ascending=False)
+    stateRulingParty = stateRulingParty.drop_duplicates(subset=['State'], keep='first')
 
     return stateRulingParty
 
@@ -302,26 +301,115 @@ def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame):
     plotHypo2(testingVsVaccinated_2nd, "No. of individuals given second shot Vs Tests Conducted after second shot")
 
 
+def getVaccineTypeCount (vaccinesTypeData : pd.DataFrame):
+    vaccinesTypeData = vaccinesTypeData.loc[vaccinesTypeData['State'] != 'India']
+    vaccineTypeData = vaccinesTypeData.copy()
+    groupedVaccineTypeData = vaccineTypeData.groupby('State').agg({'Total Covaxin Administered': 'sum', 'Total CoviShield Administered': 'sum'})
+    groupedVaccineTypeData = groupedVaccineTypeData.reset_index()
+    return groupedVaccineTypeData
+
+def rank_(grp, col, return_rank = None):
+    if return_rank == None:
+        return_rank = grp.shape[0]
+    return grp.sort_values(col, ascending  = False).head(return_rank)[['State']]
+
+
+def hypothesis3(testingData3: pd.DataFrame):
+    print("#########################################################################################################")
+    print("                                            HYPOTHESIS 3                                                ")
+    print("#########################################################################################################")
+
+    plot = go.Figure(
+        data=[go.Bar(name='Covaxin', x=testingData3['State'], y=testingData3['Total Covaxin Administered']),
+              go.Bar(name='CoviShield', x=testingData3['State'], y=testingData3['Total CoviShield Administered'])])
+    plot.update_layout(
+        title={
+            'text': 'Number of Covaxin And CoviShield Administered per State',
+            'y': 0.9,
+            'x': 0.4,
+            'xanchor': 'center',
+            'yanchor': 'top'},
+        xaxis_title="State",
+        yaxis_title="Count of vaccine administered",
+        # xaxis = dict(
+        # tickfont=dict(color="#ff7f0e"),
+        # tickmode = 'array',
+        # tickvals = [19, 31],
+        # ticktext = ['Maharashtra', 'Telangana']
+        # )
+
+    )
+    plot.show()
+
+    statewise_vaccination = pd.read_csv('http://api.covid19india.org/csv/latest/cowin_vaccine_data_statewise.csv',
+                                        parse_dates=['Updated On'])
+
+    idx = statewise_vaccination.State == 'India'
+
+    india = statewise_vaccination.loc[idx, :]
+    statewise_vaccination = statewise_vaccination.loc[~idx, :]
+
+    covis_top_3 = statewise_vaccination.groupby(['Updated On']).apply(rank_, 'Total CoviShield Administered', 3) \
+        .reset_index().drop('level_1', axis=1)
+    covis_top = covis_top_3.drop_duplicates('Updated On', keep='first')
+
+    covx_top_3 = statewise_vaccination.groupby(['Updated On']).apply(rank_, 'Total Covaxin Administered', 3) \
+        .reset_index().drop('level_1', axis=1)
+    covx_top = covx_top_3.drop_duplicates('Updated On', keep='first')
+
+    title_list = ['Top 3 states for covishield distribution', 'Top state for covishield distribution',
+                  'Top 3 states for covaxin distribution', 'Top state for covaxin distribution']
+    i = 0
+
+    for df in [covis_top_3, covis_top, covx_top_3, covx_top]:
+        df = df.State.value_counts().reset_index().rename(columns={'index': 'State', 'State': 'Highest reciever in'})
+        fig = go.Figure(go.Pie(labels=df.State, values=df['Highest reciever in']))
+        fig.update_traces(textposition='inside', textinfo='percent+label')
+        fig.update_layout(
+            title={
+                'text': title_list[i],
+                'y': 0.9,
+                'x': 0.4,
+                'xanchor': 'center',
+                'yanchor': 'top'}
+        )
+        i = i + 1
+        fig.show()
+
 if __name__ == '__main__':
-    # Loading all the input files for Hypothesis 1
+    #Loading all the input files for Hypothesis 1
     stateElections = pd.read_csv("./StateElectionData.csv")
     stateVaccinations = pd.read_csv("./covid_vaccine_statewise.csv")
     statePopulation = pd.read_csv("./statePopulationIndia.csv")
     stateVaccinations = cleanData(stateVaccinations)
     stateVaccineRecords = getStateVaccineRecords(stateVaccinations)
+
     # Cleaning all the file for Hypothesis 1
     stateElections = cleanData(stateElections)
 
     statePopulation = cleanData(statePopulation)
 
+    # Performing analysis for Hypothesis 1
+    stateGovt = hypothesis1(stateElections, stateVaccinations, statePopulation)
+
+
     # Loading all the input files for Hypothesis 2
     stateTesting = pd.read_csv("./statewise_tested_numbers_data.csv")
-
-    # Performing analysis for Hypothesis 1
-    hypothesis1(stateElections, stateVaccinations, statePopulation)
 
     # CLeaning all the files for Hypothesis 2
     stateTesting = cleanData(stateTesting)
 
     # Performing analysis for Hypothesis 2
-    hypothesis2(stateTesting, stateVaccinations)
+    hypothesis2(stateTesting, stateVaccinations, stateGovt)
+
+
+    # Grouping all the data for Hypothesis 3
+    groupedVaccineTypeData = getVaccineTypeCount(stateVaccinations)
+
+    # Performing analysis for Hypothesis 3
+    hypothesis3(groupedVaccineTypeData)
+
+
+
+
+
