@@ -114,7 +114,8 @@ def getStateVaccineRecords(stateVaccines: pd.DataFrame) -> pd.DataFrame:
 
 def calcVaccinationRate(Total_Individuals_Vaccinated: float, Population_2019: float) -> float:
     """
-    The purpose of this function is to calculate the VaccineRate in each state by finding the ratio of Total Individuals Vaccinated and Population.
+    The purpose of this function is to calculate the VaccineRate in each state by finding the ratio of Total Individuals
+    Vaccinated and Population.
     :param Total_Individuals_Vaccinated: Number of individuals vaccinated
     :param Population_2019: Population of the state
     :return: VaccineRate(float)
@@ -235,7 +236,7 @@ def hypothesis1(electionData, vaccineData, populationData):
     # Fetching the currently ruling parties in each state of India.
     stateGovernments = getStateGovernments(electionData)
 
-    # Fetching the statewise vaccination records for the latest dates.
+    # Fetching the state wise vaccination records for the latest dates.
     stateVaccineRecords = getStateVaccineRecords(vaccineData)
 
     # Calculating the rate of vaccination in each state.
@@ -312,7 +313,7 @@ def getTestGrouped(stateTesting: pd.DataFrame) -> pd.DataFrame:
     2020-04-24        9404.0  India
     """
     cols = ['Total Tested']
-    stateTesting['Updated On'] = pd.to_datetime(stateTesting['Updated On'], infer_datetime_format= True)
+    stateTesting['Updated On'] = pd.to_datetime(stateTesting['Updated On'], infer_datetime_format=True)
     # Clean data by interpolating missing values
     cleaned_data = stateTesting[['Updated On', 'State', 'Total Tested']].groupby('State')\
                             .apply(fix_timeseries, cols=cols)
@@ -374,7 +375,7 @@ def getTotalDailyVaccinated(stateVaccinations: pd.DataFrame) -> pd.DataFrame:
     <BLANKLINE>
     [4 rows x 3 columns]
     """
-    cols = ['First Dose Administered', 'Second Dose Administered', 'Total Individuals Vaccinated']
+    cols = ['First Dose Administered', 'Second Dose Administered']
     stateVaccinations['Updated On'] = pd.to_datetime(stateVaccinations['Updated On'], infer_datetime_format=True)
     unified_vacc = stateVaccinations.loc[stateVaccinations.State == 'India']
     unified_vacc = fix_timeseries(unified_vacc, cols)
@@ -401,7 +402,7 @@ def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame, IndPositi
     positives_daily = getDailyPositives(IndPositives)
     unified_vacc_daily = getTotalDailyVaccinated(vaccinesData)
 
-    cols = ['Total Tested', 'Positive', 'First Dose Administered', 'Second Dose Administered', 'Total Individuals Vaccinated']
+    cols = ['Total Tested', 'Positive', 'First Dose Administered', 'Second Dose Administered']
     unified_df = unified_test_daily.merge(unified_vacc_daily, how = 'left', on = 'Updated On')
     unified_df = unified_df.merge(positives_daily, how = 'left', on = 'Updated On')
 
@@ -411,12 +412,12 @@ def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame, IndPositi
 
     melt = unified_df_rolling.melt(id_vars='Updated On', value_vars=cols)
     fig = px.line(melt, x='Updated On', y='value', color='variable',
-                  title='Trends in tests conducted & positive cases after vaccinations rolled out')
+                  title='Trends in tests conducted & positive cases after vaccinations rolled out (7-Day Average)')
 
     fig.show()
 
 
-def getVaccineTypeCount(vaccinesTypeData : pd.DataFrame):
+def getVaccineTypeCount(vaccinesTypeData : pd.DataFrame) -> pd.DataFrame:
     """
     This function calculates the number of shots administered for each type of vaccine in each state.
     :param vaccinesTypeData: Dataframe consisting of data for each type of vaccine
@@ -483,7 +484,7 @@ def hypothesis3(testingData3: pd.DataFrame):
             'xanchor': 'center',
             'yanchor': 'top'},
         xaxis_title="State",
-        yaxis_title="Count of vaccine administered",
+        yaxis_title="Count of vaccine administered"
 
     )
     plot.show()
@@ -535,7 +536,7 @@ if __name__ == '__main__':
     stateVaccinations = cleanData(stateVaccinations)
     stateVaccineRecords = getStateVaccineRecords(stateVaccinations)
 
-    # Cleaning all the file for Hypothesis 1
+    # Cleaning all the files for Hypothesis 1
     stateElections = cleanData(stateElections)
     statePopulation = cleanData(statePopulation)
 
