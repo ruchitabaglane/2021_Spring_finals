@@ -104,6 +104,9 @@ Covid-19 Vaccination:
 
 https://www.kaggle.com/gpreda/covid-world-vaccination-progress <br>
 https://www.kaggle.com/sudalairajkumar/covid19-in-india?select=covid_vaccine_statewise <br>
+https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv <br>
+https://api.covid19india.org/csv/latest/case_time_series.csv <br>
+
 
 
 
