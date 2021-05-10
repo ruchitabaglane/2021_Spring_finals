@@ -3,7 +3,7 @@
 # Influence of Indian Politics on COVID-19 vaccination
 
 ## The idea behind the project
-Ideally, the number of new Covid-19 positive cases should not increase even once vaccinations are availabe, right? But that's not the case with majority nations around the globe. We thought of probing the matter for a particular nation, India - the current worst COVID hit nation. As we understand the distribution and availability of vaccinations can be attributed to various factors of the nation like politics, economics, demographics, weather, etc. Intrigued! we started out on a voyage to find what affects India particularly. 
+Ideally, the number of new Covid-19 positive cases should not increase once vaccinations are availabe, right? But that's not the case with majority nations around the globe. We thought of probing the matter for a particular nation, India - the current worst COVID hit nation. As we understand, the distribution and availability of vaccinations can be attributed to various factors like politics, economics, demographics, weather, etc. Intrigued! we started out on a voyage to find what affects India particularly. 
 
 ## Project Description
 Our project aims to analyze various factors affecting provision of Covid-19 vaccination in India. We intend to find the correlation between political lean and vaccine distribution across states in India. Further, we aim to find how vaccination drives affect the number of tests conducted and number of people testing positive from a nation’s perspective. Finally, we seek to explore if a state with manufacturing unit of the vaccine gets a preferential vaccine distribution.
@@ -44,7 +44,7 @@ Thus, <em> we can accept the alternate hypothesis </em> that the ruling party ha
 
 ## Hypothesis 2
 
-Does availability of vaccine influence on number of Covid-19 tests being performed?
+Does availability of vaccine has an influence on number of Covid-19 tests being performed?
 
 H0 : Administration of vaccine has impacted the number of Covid-19 tests being conducted(positively or negatively).<br>
 HA : Vaccine had no impact on the number of Covid-19 tests being conducted.
@@ -53,7 +53,7 @@ HA : Vaccine had no impact on the number of Covid-19 tests being conducted.
 
 As we can see the number of tests conducted reduced after administration of first dose of the vaccine. There is also a subsequent rise in the number of people tested and the positive cases with the rise in administration of the second dose of the vaccine.
 
-Thus, <em> we accept the null hypothesis </em> that the administration of vaccine has impacted the number of Covid-19 tests being conducted(increased or decreased).
+Thus, <em> we accept the null hypothesis </em> that the administration of vaccine has an influence on the number of Covid-19 tests being conducted(increased or decreased).
 
 ## Hypothesis 3
 
@@ -92,8 +92,7 @@ Odisha topped the list for 9.57% of days.<br><br>
 Covaxin produced in Telangana (Ruling Party - Bharatiya Janata Party)<br>
 CoviShield produced in Maharashtra (Ruling Party - Bharatiya Janata Party)<br>
 
-Thus from the above analysis and from the plot 3 of Hypothesis 3, we can see that the distribution of Covaxin and CoviShield in a particular state is independent of the political relations of the states with the state producing these vaccines. The reason for this is that even the states with ruling party apart from Bharatiya Janata party have topped the list for sevral number of days in the distribution of both CoviShield and Covaxin (Eg. Odisha, Andhra Pradesh, West Bengal).<br>
-Hence, <em> we accept the alteranate hypothesis </em>.
+From the above analysis and from the plot 3 of Hypothesis 1, we can see that the distribution of Covaxin in a particular state is independent of the political relations of the states with the state producing this vaccine variant. As even the states with ruling party apart from Bharatiya Janata Party have topped the list for several number of days in the distribution of both Covaxin (E.g. Odisha, Andhra Pradesh, West Bengal). Moreover, Telangana the producing state of Covaxin never has the maximum share of daily vaccines.<br> On the other hand, Covishield is manufactured by Maharashtra and it is also the top consumer of the vaccine, thus indicating a producer bias. Further Gujrat and Rajasthan the next 2 top consumers of Covishield are also ruled by Bharatiya Janata Party. Thus, indicating a political relations bias as well. Hence, <em> we reject the alternate hypothesis </em>. 
 
 
 ## Datasets Used
