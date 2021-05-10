@@ -189,6 +189,10 @@ def stateClassificationByRulingParty(stateGovernments: pd.DataFrame, rateOfVacci
 
 
 def is_ipython():
+    """
+    The functions check whether the environment is ipython or pycharm.
+    :return: return boolean (True or False)
+    """
     try:
         if get_ipython() == None:
             return False
