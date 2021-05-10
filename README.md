@@ -86,8 +86,8 @@ Maharashtra topped the list for 40.9% of days.<br>
 Gujarat topped the list for 45.2% of days.<br>
 Odisha topped the list for 9.57% of days.<br><br>
 
-Covaxin produced in Telangana (Ruling Party - Bharatiya Janata party)<br>
-CoviShield produced in Maharashtra (Ruling Party - Bharatiya Janata party)<br>
+Covaxin produced in Telangana (Ruling Party - Bharatiya Janata Party)<br>
+CoviShield produced in Maharashtra (Ruling Party - Bharatiya Janata Party)<br>
 
 Thus from the above analysis and from the plot 3 of Hypothesis 1, we can see that the distribution of Covaxin and CoviShield in a particular state is independent of the political relations of the states with the state producing these vaccines. The reason for this is that even the states with ruling party apart from Bharatiya Janata party have topped the list for sevral number of days in the distribution of both CoviShield and Covaxin (Eg. Odisha, Andhra Pradesh, West Bengal).<br>
 Hence, <em> we accept the alteranate hypothesis </em>.
