@@ -55,8 +55,6 @@ As we can see the number of tests conducted reduced after administration of firs
 
 Thus, <em> we accept the null hypothesis </em> that the administration of vaccine has an influence on the number of Covid-19 tests being conducted(increased or decreased).
 
-![image](https://user-images.githubusercontent.com/77983776/117367621-0655be80-ae88-11eb-9f58-8e4b1decdbed.png)
-
 ## Hypothesis 3
 
 Does the political relations of states producing the vaccine have an impact on the accessibility of the vaccine to the other states.
