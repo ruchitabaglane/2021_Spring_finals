@@ -46,7 +46,7 @@ Thus, <em> we can accept the alternate hypothesis </em> that the ruling party ha
 
 Does availability of vaccine has an influence on number of Covid-19 tests being performed?
 
-H0 : Administration of vaccine has impacted the number of Covid-19 tests being conducted(positively or negatively).<br>
+H0 : Administration of vaccine has an influence on the number of Covid-19 tests being conducted(positively or negatively).<br>
 HA : Vaccine had no impact on the number of Covid-19 tests being conducted.
 
 ![image](https://user-images.githubusercontent.com/77983776/117695353-c2173680-b185-11eb-802c-6c1ae223a5cc.png)
@@ -59,7 +59,7 @@ Thus, <em> we accept the null hypothesis </em> that the administration of vaccin
 
 Does the political relations of states producing the vaccine have an impact on the accessibility of the vaccine to the other states.
 
-H0 : States having good political relations with states producing the vaccine has better accessibility to the vaccine.<br>
+H0 : States having good political relations with states producing the vaccine have better accessibility to the vaccine.<br>
 HA : Accessibility to vaccine in any state is not dependent on the political relations with the state producing the vaccine.
 
 ## The plot below shows the number of Covaxin and CoviShield distributed per state
@@ -92,7 +92,9 @@ Odisha topped the list for 9.57% of days.<br><br>
 Covaxin produced in Telangana (Ruling Party - Bharatiya Janata Party)<br>
 CoviShield produced in Maharashtra (Ruling Party - Bharatiya Janata Party)<br>
 
-From the above analysis and from the plot 3 of Hypothesis 1, we can see that the distribution of Covaxin in a particular state is independent of the political relations of the states with the state producing this vaccine variant. As even the states with ruling party apart from Bharatiya Janata Party have topped the list for several number of days in the distribution of both Covaxin (E.g. Odisha, Andhra Pradesh, West Bengal). Moreover, Telangana the producing state of Covaxin never has the maximum share of daily vaccines.<br> On the other hand, Covishield is manufactured by Maharashtra and it is also the top consumer of the vaccine, thus indicating a producer bias. Further Gujrat and Rajasthan the next 2 top consumers of Covishield are also ruled by Bharatiya Janata Party. Thus, indicating a political relations bias as well. Hence, <em> we reject the alternate hypothesis </em>. 
+From the above analysis and from the plot 3 of Hypothesis 1, we can see that the distribution of Covaxin in a particular state is independent of the political relations of the states with the state producing this vaccine variant. As even the states with ruling party apart from Bharatiya Janata Party have topped the list for several number of days in the distribution of Covaxin (E.g. Odisha, Andhra Pradesh, West Bengal). Moreover, Telangana the producing state of Covaxin never has the maximum share of daily vaccines.<br>On the other hand, Covishield is manufactured by Maharashtra and it is also the top consumer of the vaccine, thus indicating a producer bias. Further Gujrat and Rajasthan the next 2 top consumers of Covishield are also ruled by Bharatiya Janata Party. 
+
+Thus, indicating a political relations bias as well. Hence, <em> we reject the null hypothesis </em>. 
 
 
 ## Datasets Used
