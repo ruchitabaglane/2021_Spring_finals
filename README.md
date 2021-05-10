@@ -35,7 +35,7 @@ By looking at the above plot, we can say that the states having BJP in power whi
 
 For better understanding, we have also plotted a bar graph of statewise vaccination rates. The colour of the bar represents the currently ruling party in that state. It can be observed that even though BJP is in power in most of the states, it has a significantly low vaccination rates in states like Uttar Pradesh, Madhya Pradesh, Bihar, Jharkhand, Assam. Whereas, the parties like SKM and NCP have better vaccination rates in states that they are in power.
 
-![image](https://user-images.githubusercontent.com/77983551/117613288-476dfd00-b12c-11eb-91e2-3c1018dfcd16.png)
+![image](https://user-images.githubusercontent.com/77983776/117625672-de8e8100-b13b-11eb-9641-0c4a5e2a9f27.png)
 
 Thus, <em> we can accept the alternate hypothesis </em> that the governing body/party has no effect on the distribution of vaccination and we need to explore more factors which has an impact on the vaccine distribution across the states.
 
@@ -47,6 +47,7 @@ Conducting a test to see if the availability of vaccine has any influence on num
 H0 : Administration of vaccine has impacted the number of Covid-19 tests being conducted(increased or decreased).<br>
 HA : Vaccine had no impact on the number of Covid-19 tests being conducted.
 
+![image](https://user-images.githubusercontent.com/77983776/117625755-f7973200-b13b-11eb-9d3a-37049b1dacbe.png)
 
 So as we can see from the graph that the number of tests conducted has increased after the admistration second fose of the vaccine. Also, we can see a spike in the number of positive cases shortly after the second dose of vaccine started.
 
