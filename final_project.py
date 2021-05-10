@@ -13,6 +13,20 @@ def cleanData(dataSet: pd.DataFrame) -> pd.DataFrame:
     This function is used to clean the data and make it consistent for further processing.
     :param dataSet: Dataframe to be cleaned
     :return: Dataframe with appropriate transformations.
+
+    >>> stateElections1 = pd.DataFrame(np.array([['16/01/2021','Andaman and Nicobar Islands'],['17/01/2021','Andaman and Nicobar Islands'],['16/01/2021','Delhi'],['17/01/2021','Delhi']]), columns = ['Updated On','State'])
+    >>> cleanData(stateElections1)
+       Updated On                      State
+    0  16/01/2021  Andaman & Nicobar Islands
+    1  17/01/2021  Andaman & Nicobar Islands
+    2  16/01/2021               NCT OF Delhi
+    3  17/01/2021               NCT OF Delhi
+
+    >>> stateElections2 = pd.DataFrame(np.array([['16/01/2021','2'],['17/01/2021','2'],['16/01/2021','91'],['17/01/2021','288']]), columns = ['Updated On','Total Sessions Conducted'])
+    >>> cleanData(stateElections2)
+    Traceback (most recent call last):
+    KeyError: 'State'
+
     """
     dataSet_copy = dataSet.copy()
     mapper = pd.read_csv('mapper.csv')
@@ -27,6 +41,17 @@ def getStateGovernments(stateElect: pd.DataFrame) -> pd.DataFrame:
     This function aims to find the Ruling Party in each state and the votes it received.
     :param stateElect: Dataframe with election data
     :return: Dataframe with states and the corresponding political party in power.
+
+    >>> getStateGovernments1 = pd.DataFrame(np.array([['Manipur','Inner manipur','263632','Bharatiya Janata Party','DR RAJKUMAR RANJAN SINGH'],['Manipur','Outer manipur','363527','Naga Peoples Front','Lorho S. Pfoze'],['Meghalaya','Shillong','419689','Indian National Congress','VINCENT H. PALA'],['Meghalaya','Tura','304455','National Peoples Party','AGATHA K. SANGMA']]),columns = ['State','Constituency','Votes','Party','Candidate'])
+    >>> getStateGovernments(getStateGovernments1)
+           State                     Party   Votes
+    2  Meghalaya  Indian National Congress  419689
+    1    Manipur        Naga Peoples Front  363527
+
+    >>> getStateGovernments2 = pd.DataFrame(np.array([['Manipur','Inner manipur','Bharatiya Janata Party','DR RAJKUMAR RANJAN SINGH'],['Manipur','Outer manipur','Naga Peoples Front','Lorho S. Pfoze'],['Meghalaya','Shillong','Indian National Congress','VINCENT H. PALA'],['Meghalaya','Tura','National Peoples Party','AGATHA K. SANGMA']]),columns = ['State','Constituency','Party','Candidate'])
+    >>> getStateGovernments(getStateGovernments2)
+    Traceback (most recent call last):
+    pandas.core.base.SpecificationError: Column(s) ['Votes'] do not exist
     """
     groupByStateParty = stateElect.groupby(['State', 'Party']).agg({'Votes': 'sum'})
     groupByStateParty.columns = ['Votes']
@@ -43,6 +68,17 @@ def getStateVaccineRecords(stateVaccines: pd.DataFrame) -> pd.DataFrame:
     This function is used to find the vaccine data for each state based on the latest updated date.
     :param stateVaccines: Dataframe with vaccine data statewise.
     :return: Dataframe with sates and corresponding number of individuals vaccinated as per latest updated date.
+
+    >>> getStateVaccineRecords1 = pd.DataFrame(np.array([['20/04/2021','Manipur','109878'],['21/04/2021','Manipur','114345'],['20/04/2021','Sikkim','146868'],['21/04/2021','Sikkim','147787']]),columns = ['Updated On','State','Total Individuals Registered'])
+    >>> getStateVaccineRecords(getStateVaccineRecords1)
+       index Updated On    State Total Individuals Registered
+    0      1 2021-04-21  Manipur                       114345
+    1      3 2021-04-21   Sikkim                       147787
+
+    >>> getStateVaccineRecords2 = pd.DataFrame(np.array([['Manipur','109878'],['Manipur','114345'],['Sikkim','146868'],['Sikkim','147787']]),columns = ['State','Total Individuals Registered'])
+    >>> getStateVaccineRecords(getStateVaccineRecords2)
+    Traceback (most recent call last):
+    KeyError: 'Updated On'
     """
     stateVaccines = cleanData(stateVaccines)
     stateVaccines = stateVaccines.loc[stateVaccines['State'] != 'India']
@@ -59,6 +95,15 @@ def calcVaccinationRate(Total_Individuals_Vaccinated: float, Population_2019: fl
     :param Total_Individuals_Vaccinated: Number of individuals vaccinated
     :param Population_2019: Population of the state
     :return: VaccineRate(float)
+
+    >>> calcVaccinationRate(3456723,45637289)
+    7.574339045424017
+    >>> calcVaccinationRate(3456723,0)
+    Traceback (most recent call last):
+    ZeroDivisionError: division by zero
+    >>> calcVaccinationRate(0,0)
+    Traceback (most recent call last):
+    ZeroDivisionError: division by zero
     """
     VaccinationRate = (Total_Individuals_Vaccinated / Population_2019) * 100
     return VaccinationRate
@@ -72,6 +117,11 @@ def calcRateOfVaccination(vaccineRecords: pd.DataFrame, statePop: pd.DataFrame,
     :param statePop: Population data
     :param stateGovernments: Election data
     :return: Tuple with two dataframes consisting of vaccination rates.
+
+    >>> stateGovernments1 = pd.DataFrame(np.array([['Manipur','Inner manipur','Bharatiya Janata Party','DR RAJKUMAR RANJAN SINGH'],['Meghalaya','Shillong','Indian National Congress','VINCENT H. PALA']]),columns = ['State','Constituency','Party','Candidate'])
+    >>> statPop1 = pd.DataFrame(np.array([['Meghalaya',3366710.0,2966889],['Manipur',3091545.0,2855794]]), columns = ['State','Population_2019','Population_2011'])
+    >>> vaccineRecords1 = pd.DataFrame(np.array([['20/04/2021','Manipur','109878','11400','108','109878','52226','73805','36068','5','0','162104',109878.0,162104,],['20/04/2021','Meghalaya','133716','29000','260','133716','46932','68644','65059','13','0','180648',133716.0,180648]]), columns = ['Updated On','State','Total Individuals Registered','Total Sessions Conducted','Total Sites','First Dose Administered','Second Dose Administered','Male(Individuals Vaccinated)','Female(Individuals Vaccinated)','Transgender(Individuals Vaccinated)','Total Covaxin Administered','Total CoviShield Administered','Total Individuals Vaccinated','Total Doses Administered'])
+    >>> calcRateOfVaccination(vaccineRecords1,statPop1,stateGovernments1)
     """
     vaccinePopulation = statePop[['State', 'Population_2019']].merge(
                         vaccineRecords[['Updated On', 'State', 'Total Individuals Vaccinated']], on='State')
@@ -153,7 +203,7 @@ def hypothesis1(electionData, vaccineData, populationData):
     # Classifying the states by ruling parties.
     vaccinationRate_by_rulingParty = stateClassificationByRulingParty(stateGovernments, rateOfVaccination_vs_party[1])
 
-    # plotting bar bar graph for States vs Vaccination rate and coloring the bar plot to represent the ruling party.
+    # Plotting bar graph for States vs Vaccination rate and coloring the bar plot to represent the ruling party.
     fig, ax = plt.subplots(figsize=(100, 30))
     for key, grp in vaccinationRate_by_rulingParty.groupby(['Party']):
         ax.bar(grp['State'], grp['VaccinationRate'], label=key)
@@ -306,6 +356,12 @@ def getVaccineTypeCount (vaccinesTypeData : pd.DataFrame):
     This function calculates the number of shots administered for each type of vaccine in each state.
     :param vaccinesTypeData: Dataframe consisting of data for each type of vaccine
     :return: Dataframe with number of shots administered per vaccine in each state.
+
+    >>> vaccinesTypeData1 = pd.DataFrame(np.array([['20/04/2021','Manipur',10988,11400,108,109878,52226,73805,36068,5,0,162104,109878.0,162104,],['20/04/2021','Meghalaya',133716,29000,260,133716,46932,68644,65059,13,0,180648,133716.0,180648]]), columns = ['Updated On','State','Total Individuals Registered','Total Sessions Conducted','Total Sites','First Dose Administered','Second Dose Administered','Male(Individuals Vaccinated)','Female(Individuals Vaccinated)','Transgender(Individuals Vaccinated)','Total Covaxin Administered','Total CoviShield Administered','Total Individuals Vaccinated','Total Doses Administered'])
+    >>> getVaccineTypeCount(vaccinesTypeData1)
+           State Total Covaxin Administered Total CoviShield Administered
+    0    Manipur                          0                        162104
+    1  Meghalaya                          0                        180648
     """
     vaccinesTypeData = vaccinesTypeData.loc[vaccinesTypeData['State'] != 'India']
     vaccineTypeData = vaccinesTypeData.copy()
@@ -316,11 +372,22 @@ def getVaccineTypeCount (vaccinesTypeData : pd.DataFrame):
 
 def rank_(grp, col, return_rank=None):
     """
-    This function is used find the rank of the state based on daily distribution of each type of vaccine.
+    This function is used to find the rank of the state based on daily distribution of each type of vaccine.
     :param grp:
     :param col:
     :param return_rank:
     :return:
+
+    >>> df = pd.DataFrame(np.array([['2021-01-16', 'Delhi', 23.0, 0.0, 23.0], ['2021-01-16', 'Punjab', 25.0, 1.0, 24.0],
+    ... ['2021-01-16', 'Gujrat', 35.0, 6.0, 29.0], ['2021-01-16', 'Maharashtra', 40.0, 6.0, 34.0]]),
+    ... columns = ['Updated On','State', 'Total Individuals Vaccinated', 'Total Covaxin Administered',
+    ...            'Total CoviShield Administered'])
+    >>> rank_(df, 'Total CoviShield Administered', return_rank=None)
+             State
+    3  Maharashtra
+    2       Gujrat
+    1       Punjab
+    0        Delhi
     """
     if return_rank==None:
         return_rank = grp.shape[0]
