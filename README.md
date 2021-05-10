@@ -47,9 +47,10 @@ Conducting a test to see if the availability of vaccine has had any impact on nu
 H0 : Administration of vaccine has impacted the number of Covid-19 tests being conducted(increased or decreased).<br>
 HA : Vaccine had no impact on the number of Covid-19 tests being conducted.
 
-Based on the results of the above hypothesis we may further check if the actual number of positive cases increase or decrease after vaccination (Since in India the number of cases has increased even after vaccine distribution)
 
-![image](https://user-images.githubusercontent.com/77983776/117367621-0655be80-ae88-11eb-9f58-8e4b1decdbed.png)
+So as we can see from the graph that the number of tests conducted has increased after the admistration second fose of the vaccine. Also, we can see a spike in the number of positive cases shortly after the second dose of vaccine started.
+
+Thus, <em> we accept the null hypothesis </em> that the admistration of vaccine has impacted the number of Covid-19 tests being conducted(increased or decreased).
 
 ## Hypothesis 3
 
@@ -58,16 +59,29 @@ Does the political relations of states producing the vaccine have an impact on t
 H0 : States having good political relations with states producing the vaccine has better accessibility to the vaccine.<br>
 HA : Accessibility to vaccine in any state is not dependent on the political relations with the state producing the vaccine.
 
+## The plot below shows the number of Covaxin and CoviShield distributed per state
+
 ![image](https://user-images.githubusercontent.com/77983551/117613637-cf540700-b12c-11eb-873b-c342d2d41e88.png)
 
+## The plots belows represents the top consumners(states) of Covaxin and CoviShield
+
 ![image](https://user-images.githubusercontent.com/77983551/117613761-fdd1e200-b12c-11eb-9b92-4628be057ce7.png)
+The above chart represents the number of days for which each state was in the top 3 consumers of CoviShield. 
 
 ![image](https://user-images.githubusercontent.com/77983551/117613834-180bc000-b12d-11eb-83a3-f2e8ded24d19.png)
+The above chart represents the number of days for which each state was the top consumer of CoviShield. 
+Maharashtra topped the list for 40% of days.
+Rajasthan topped the list for 16.5% of days.
+Uttar Pradesh topped the list for 33.9% of days.
 
 ![image](https://user-images.githubusercontent.com/77983551/117613904-2e198080-b12d-11eb-893b-513e098809f3.png)
+The above chart represents the number of days for which each state was in the top 3 consumers of Covaxin.
 
 ![image](https://user-images.githubusercontent.com/77983551/117613985-48535e80-b12d-11eb-93a7-7441b990d3a7.png)
-
+The above chart represents the number of days for which each state was the top consumer of Covaxin. 
+Maharashtra topped the list for 40.9% of days.
+Gujarat topped the list for 45.2% of days.
+Odisha topped the list for 9.57% of days.
 
 ## Datasets Used
 
