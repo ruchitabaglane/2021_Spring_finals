@@ -1,3 +1,12 @@
+"""
+IS 597 PROGRAMMING ANALYTICS - FINAL PROJECT
+Authors: RUCHITA BAGLANE(baglane2), PRACHI DOSHI(ppdoshi2)
+Submission Date: May 10th, 2021
+Instructor: John Weible
+
+Title: INFLUENCE OF INDIAN POLITICS ON COVID-19 VACCINATION
+"""
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -243,17 +252,33 @@ def hypothesis1(electionData, vaccineData, populationData):
 
     # plotting bar bar graph for States vs Vaccination rate and coloring the bar plot to represent the ruling party.
     fig = px.bar(vaccinationRate_by_rulingParty, x='State', y='VaccinationRate', hover_name='Party',
-                 color='Party', color_discrete_sequence=px.colors.sequential.Plasma_r)
+                 color='Party', color_discrete_sequence=px.colors.sequential.Plasma_r,
+                 title='States vs Vaccination rate')
     fig.update_xaxes(tickangle=45)
     fig.show()
 
 
-def fix_timeseries(grp, cols):
+def fix_timeseries(grp: pd.DataFrame, cols) -> pd.DataFrame:
     """
     This function is used to interpolate the mssing data for testing, positive cases and number of vaccinations.
     :param grp: DataFrame.
     :param cols: column names to be ranked.
     :return: dataframe with fixed values.
+
+    >>> df=pd.DataFrame([['2020-04-17', 'Andaman & Nicobar Islands', 1403.0],['2020-04-24', 'Andaman & Nicobar Islands'
+    ... , 2679.0]], columns=['Updated On', 'State', 'Total Tested'])
+    >>> df['Updated On'] = pd.to_datetime(df['Updated On'], infer_datetime_format= True)
+    >>> fix_timeseries(df, 'Total Tested')
+    Updated On
+    2020-04-17    1403.0
+    2020-04-18    1585.0
+    2020-04-19    1768.0
+    2020-04-20    1950.0
+    2020-04-21    2132.0
+    2020-04-22    2314.0
+    2020-04-23    2497.0
+    2020-04-24    2679.0
+    Freq: D, Name: Total Tested, dtype: float64
     """
     grp = grp.drop_duplicates('Updated On')
     grp = grp.set_index('Updated On')
@@ -261,17 +286,32 @@ def fix_timeseries(grp, cols):
     return grp
 
 
-def getTestGrouped(testData: pd.DataFrame) -> pd.DataFrame:
+def getTestGrouped(stateTesting: pd.DataFrame) -> pd.DataFrame:
     """
     Combines number of tests conducted and positive cases for each day recorded in dataset for every state.
-    :param testData: Data frame consisting of the COVID-19 testing data for each state.
+    :param stateTesting: Data frame consisting of the COVID-19 testing data for each state.
     :return: Creates a dataframe having total number of tests conducted and positive cases for each day recorded in India.
+
+    >>> df = pd.DataFrame([['17/04/2020', 'Andaman & Nicobar Islands', 1403.0], ['24/04/2020', 'Andaman & Nicobar Islands'
+    ... , 2679.0], ['17/04/2020', 'West Bengal', 10777718.0], ['24/04/2020', 'West Bengal', 10842269.0]],
+    ... columns=['Updated On', 'State', 'Total Tested'])
+    >>> getTestGrouped(df)
+                Total Tested  State
+    Updated On
+    2020-04-17           NaN  India
+    2020-04-18        9404.0  India
+    2020-04-19        9404.0  India
+    2020-04-20        9404.0  India
+    2020-04-21        9403.0  India
+    2020-04-22        9404.0  India
+    2020-04-23        9404.0  India
+    2020-04-24        9404.0  India
     """
     cols = ['Total Tested']
     stateTesting['Updated On'] = pd.to_datetime(stateTesting['Updated On'], infer_datetime_format= True)
     # Clean data by interpolating missing values
     cleaned_data = stateTesting[['Updated On', 'State', 'Total Tested']].groupby('State')\
-                            .apply(fix_timeseries, cols = cols)
+                            .apply(fix_timeseries, cols=cols)
 
     # Combine values for all states to get a nation aggregate
     unified_test = cleaned_data.groupby('Updated On')[cols].sum().reset_index()
@@ -289,8 +329,18 @@ def getDailyPositives(positives: pd.DataFrame) -> pd.DataFrame:
     Combines number of positive cases for each day.
     :param positives: Dataframe consisting of number of positives cases in incremental manner.
     :return: Dataframe having total number of positive cases vaccinated for each day.
+
+    >>> df = pd.DataFrame([['05/05/2021', 21070885], ['05/06/2021', 21485165], ['05/07/2021', 21892067]],
+    ... columns = ['Date_YMD', 'Total Confirmed'])
+    >>> getDailyPositives(df)
+                Positive
+    Updated On
+    2021-05-05       NaN
+    2021-05-06  414280.0
+    2021-05-07  406902.0
     """
     positives = positives.rename(columns={'Date_YMD': 'Updated On', 'Total Confirmed': 'Positive'})
+    positives['Updated On'] = pd.to_datetime(positives['Updated On'], infer_datetime_format=True)
     positives = positives.loc[:, ['Updated On', 'Positive']]
     positives = fix_timeseries(positives, ['Positive'])
     positives_daily = positives.copy(deep=True)
@@ -302,14 +352,29 @@ def getDailyPositives(positives: pd.DataFrame) -> pd.DataFrame:
 def getTotalDailyVaccinated(stateVaccinations: pd.DataFrame) -> pd.DataFrame:
     """
     Combines number of individuals vaccinated for each day across all the states.
-    :param vaccination: Dataframe consisting of vaccination records for each state.
+    :param stateVaccinations: Dataframe consisting of vaccination records for each state.
     :return: Dataframe having total number of individuals vaccinated for each day recorded.
+
+    >>> df = pd.DataFrame([['15/02/2021', 'India', 118110.0, 1651.0, 118110.0],
+    ...                             ['16/02/2021', 'India', 130669.0, 5039.0, 130669.0],
+    ...                             ['17/02/2021', 'India', 8777268.0, 2817455.0, 8777268.0],
+    ...                             ['18/02/2021', 'India', 8808010.0, 3031670.0, 8808010.0]],
+    ... columns = ['Updated On', 'State', 'First Dose Administered', 'Second Dose Administered', 'Total Individuals Vaccinated'])
+    >>> getTotalDailyVaccinated(df)
+                First Dose Administered  ...  Total Individuals Vaccinated
+    Updated On                           ...
+    2021-02-15                      NaN  ...                           NaN
+    2021-02-16                  12559.0  ...                       12559.0
+    2021-02-17                8646599.0  ...                     8646599.0
+    2021-02-18                  30742.0  ...                       30742.0
+    <BLANKLINE>
+    [4 rows x 3 columns]
     """
     cols = ['First Dose Administered', 'Second Dose Administered', 'Total Individuals Vaccinated']
-    stateVaccinations['Updated On'] = pd.to_datetime(stateVaccinations['Updated On'], infer_datetime_format = True)
+    stateVaccinations['Updated On'] = pd.to_datetime(stateVaccinations['Updated On'], infer_datetime_format=True)
     unified_vacc = stateVaccinations.loc[stateVaccinations.State == 'India']
     unified_vacc = fix_timeseries(unified_vacc, cols)
-    unified_vacc_daily = unified_vacc.copy(deep = True)
+    unified_vacc_daily = unified_vacc.copy(deep=True)
     unified_vacc_daily[cols] = unified_vacc_daily[cols].diff(1)
 
     return unified_vacc_daily
@@ -341,7 +406,8 @@ def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame, IndPositi
     unified_df_rolling = unified_df_rolling.reset_index()
 
     melt = unified_df_rolling.melt(id_vars='Updated On', value_vars=cols)
-    fig = px.line(melt, x = 'Updated On', y = 'value', color = 'variable')
+    fig = px.line(melt, x='Updated On', y='value', color='variable',
+                  title='Trends in tests conducted & positive cases after vaccinations rolled out')
 
     fig.show()
 
@@ -352,7 +418,12 @@ def getVaccineTypeCount(vaccinesTypeData : pd.DataFrame):
     :param vaccinesTypeData: Dataframe consisting of data for each type of vaccine
     :return: Dataframe with number of shots administered per vaccine in each state.
 
-    >>> vaccinesTypeData1 = pd.DataFrame(np.array([['20/04/2021','Manipur',10988,11400,108,109878,52226,73805,36068,5,0,162104,109878.0,162104,],['20/04/2021','Meghalaya',133716,29000,260,133716,46932,68644,65059,13,0,180648,133716.0,180648]]), columns = ['Updated On','State','Total Individuals Registered','Total Sessions Conducted','Total Sites','First Dose Administered','Second Dose Administered','Male(Individuals Vaccinated)','Female(Individuals Vaccinated)','Transgender(Individuals Vaccinated)','Total Covaxin Administered','Total CoviShield Administered','Total Individuals Vaccinated','Total Doses Administered'])
+    >>> vaccinesTypeData1 = pd.DataFrame(np.array([['20/04/2021','Manipur',10988,11400,108,109878,52226,73805,36068,5,0,
+    ... 162104,109878.0,162104,],['20/04/2021','Meghalaya',133716,29000,260,133716,46932,68644,65059,13,0,180648,133716.0,
+    ... 180648]]), columns = ['Updated On','State','Total Individuals Registered','Total Sessions Conducted',
+    ... 'Total Sites','First Dose Administered','Second Dose Administered','Male(Individuals Vaccinated)',
+    ... 'Female(Individuals Vaccinated)','Transgender(Individuals Vaccinated)','Total Covaxin Administered',
+    ... 'Total CoviShield Administered','Total Individuals Vaccinated','Total Doses Administered'])
     >>> getVaccineTypeCount(vaccinesTypeData1)
            State Total Covaxin Administered Total CoviShield Administered
     0    Manipur                          0                        162104
@@ -429,10 +500,10 @@ def hypothesis3(testingData3: pd.DataFrame):
         .reset_index().drop('level_1', axis=1)
     covx_top = covx_top_3.drop_duplicates('Updated On', keep='first')
 
-    title_list = ['No. of Days when state received most daily shares of Coviesheild (State in top 3)',\
-                  'No. of Days when state received most daily shares of Coviesheild (State tops the list)',\
-                  'No. of Days when state received most daily shares of Covaxin (State in top 3)',\
-                  'No. of Days when state received most daily shares of Covaxin (State tops the list)']
+    title_list = ['No. of Days when state received max daily shares of Coviesheild (State in top 3)',\
+                  'No. of Days when state received max daily shares of Coviesheild (State tops the list)',\
+                  'No. of Days when state received max daily shares of Covaxin (State in top 3)',\
+                  'No. of Days when state received max daily shares of Covaxin (State tops the list)']
     i = 0
 
     for df in [covis_top_3, covis_top, covx_top_3, covx_top]:
@@ -462,7 +533,6 @@ if __name__ == '__main__':
 
     # Cleaning all the file for Hypothesis 1
     stateElections = cleanData(stateElections)
-
     statePopulation = cleanData(statePopulation)
 
     # Performing analysis for Hypothesis 1
@@ -470,9 +540,7 @@ if __name__ == '__main__':
 
     # Loading all the input files for Hypothesis 2
     stateTesting = pd.read_csv("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv")
-    # Loading file for Hypothesis 3
-    India_positives = pd.read_csv('https://api.covid19india.org/csv/latest/case_time_series.csv',
-                                  parse_dates=['Date_YMD'])
+    India_positives = pd.read_csv('https://api.covid19india.org/csv/latest/case_time_series.csv')
 
     # CLeaning all the files for Hypothesis 2
     stateTesting = cleanData(stateTesting)
@@ -485,8 +553,3 @@ if __name__ == '__main__':
 
     # Performing analysis for Hypothesis 3
     hypothesis3(groupedVaccineTypeData)
-
-
-
-
-
