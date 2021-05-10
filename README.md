@@ -92,9 +92,9 @@ Odisha topped the list for 9.57% of days.<br><br>
 Covaxin produced in Telangana (Ruling Party - Bharatiya Janata Party)<br>
 CoviShield produced in Maharashtra (Ruling Party - Bharatiya Janata Party)<br>
 
-From the above analysis and from the plot 3 of Hypothesis 1, we can see that the distribution of Covaxin in a particular state is independent of the political relations of the states with the state producing this vaccine variant. As even the states with ruling party apart from Bharatiya Janata Party have topped the list for several number of days in the distribution of Covaxin (E.g. Odisha, Andhra Pradesh, West Bengal). Moreover, Telangana the producing state of Covaxin never has the maximum share of daily vaccines.<br>On the other hand, Covishield is manufactured by Maharashtra and it is also the top consumer of the vaccine, thus indicating a producer bias. Further Gujrat and Rajasthan the next 2 top consumers of Covishield are also ruled by Bharatiya Janata Party. 
+From the above analysis and from the plot 3 of Hypothesis 1, we can see that the distribution of Covaxin in a particular state is independent of the political relations of the states with the state producing this vaccine variant. As even the states with ruling party apart from Bharatiya Janata Party have topped the list for several number of days in the distribution of Covaxin (E.g. Odisha, Andhra Pradesh, West Bengal). Moreover, Telangana the producing state of Covaxin never has the maximum share of daily vaccines.<br>On the other hand, Covishield is manufactured by Maharashtra and it is also the top consumer of the vaccine, thus indicating a producer bias. Further Gujrat and Rajasthan the next 2 top consumers of Covishield are also ruled by Bharatiya Janata Party. Thus, indicating a political relations bias. 
 
-Thus, indicating a political relations bias as well. Hence, <em> we reject the null hypothesis </em>. 
+As one vaccine variant shows a bias and the other doesn't <em> we reject the null hypothesis </em>. 
 
 
 ## Datasets Used
