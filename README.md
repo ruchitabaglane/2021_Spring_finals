@@ -63,25 +63,29 @@ HA : Accessibility to vaccine in any state is not dependent on the political rel
 
 ![image](https://user-images.githubusercontent.com/77983551/117613637-cf540700-b12c-11eb-873b-c342d2d41e88.png)
 
-## The plots belows represents the top consumners(states) of Covaxin and CoviShield
+## The plots belows represents the top consumers(states) of Covaxin and CoviShield
 
 ![image](https://user-images.githubusercontent.com/77983551/117613761-fdd1e200-b12c-11eb-9b92-4628be057ce7.png)
 The above chart represents the number of days for which each state was in the top 3 consumers of CoviShield. 
 
+
 ![image](https://user-images.githubusercontent.com/77983551/117613834-180bc000-b12d-11eb-83a3-f2e8ded24d19.png)
-The above chart represents the number of days for which each state was the top consumer of CoviShield. 
-Maharashtra topped the list for 40% of days.
-Rajasthan topped the list for 16.5% of days.
-Uttar Pradesh topped the list for 33.9% of days.
+The above chart represents the number of days for which each state was the top consumer of CoviShield. <br>
+Maharashtra topped the list for 40% of days.<br>
+Rajasthan topped the list for 16.5% of days.<br>
+Uttar Pradesh topped the list for 33.9% of days.<br>
+
 
 ![image](https://user-images.githubusercontent.com/77983551/117613904-2e198080-b12d-11eb-893b-513e098809f3.png)
 The above chart represents the number of days for which each state was in the top 3 consumers of Covaxin.
 
+
 ![image](https://user-images.githubusercontent.com/77983551/117613985-48535e80-b12d-11eb-93a7-7441b990d3a7.png)
-The above chart represents the number of days for which each state was the top consumer of Covaxin. 
-Maharashtra topped the list for 40.9% of days.
-Gujarat topped the list for 45.2% of days.
-Odisha topped the list for 9.57% of days.
+The above chart represents the number of days for which each state was the top consumer of Covaxin. <br>
+Maharashtra topped the list for 40.9% of days.<br>
+Gujarat topped the list for 45.2% of days.<br>
+Odisha topped the list for 9.57% of days.<br>
+
 
 ## Datasets Used
 
