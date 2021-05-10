@@ -37,7 +37,7 @@ For better understanding, we have also plotted a bar graph of statewise vaccinat
 
 ![image](https://user-images.githubusercontent.com/77983551/117613288-476dfd00-b12c-11eb-91e2-3c1018dfcd16.png)
 
-Thus, we can accept the alternate hypothesis that the governing body/party has no effect on the distribution of vaccination and we need to explore more factors which has an impact on the vaccine distribution across the states.
+Thus, <b> we can accept the alternate hypothesis <b> that the governing body/party has no effect on the distribution of vaccination and we need to explore more factors which has an impact on the vaccine distribution across the states.
 
 
 ## Hypothesis 2
