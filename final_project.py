@@ -2,10 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import calendar
+from IPython import get_ipython
 from numerize import numerize
 import plotly.graph_objects as go
 import plotly.express as px
-from ipywidgets import interact, widgets
+from ipywidgets import interact, widgets, fixed
 
 
 def cleanData(dataSet: pd.DataFrame) -> pd.DataFrame:
@@ -14,7 +15,9 @@ def cleanData(dataSet: pd.DataFrame) -> pd.DataFrame:
     :param dataSet: Dataframe to be cleaned
     :return: Dataframe with appropriate transformations.
 
-    >>> stateElections1 = pd.DataFrame(np.array([['16/01/2021','Andaman and Nicobar Islands'],['17/01/2021','Andaman and Nicobar Islands'],['16/01/2021','Delhi'],['17/01/2021','Delhi']]), columns = ['Updated On','State'])
+    >>> stateElections1 = pd.DataFrame(np.array([['16/01/2021','Andaman and Nicobar Islands'],
+    ... ['17/01/2021','Andaman and Nicobar Islands'],['16/01/2021','Delhi'],['17/01/2021','Delhi']]),
+    ... columns = ['Updated On','State'])
     >>> cleanData(stateElections1)
        Updated On                      State
     0  16/01/2021  Andaman & Nicobar Islands
@@ -22,7 +25,8 @@ def cleanData(dataSet: pd.DataFrame) -> pd.DataFrame:
     2  16/01/2021               NCT OF Delhi
     3  17/01/2021               NCT OF Delhi
 
-    >>> stateElections2 = pd.DataFrame(np.array([['16/01/2021','2'],['17/01/2021','2'],['16/01/2021','91'],['17/01/2021','288']]), columns = ['Updated On','Total Sessions Conducted'])
+    >>> stateElections2 = pd.DataFrame(np.array([['16/01/2021','2'],['17/01/2021','2'],['16/01/2021','91'],
+    ... ['17/01/2021','288']]), columns = ['Updated On','Total Sessions Conducted'])
     >>> cleanData(stateElections2)
     Traceback (most recent call last):
     KeyError: 'State'
@@ -42,13 +46,19 @@ def getStateGovernments(stateElect: pd.DataFrame) -> pd.DataFrame:
     :param stateElect: Dataframe with election data
     :return: Dataframe with states and the corresponding political party in power.
 
-    >>> getStateGovernments1 = pd.DataFrame(np.array([['Manipur','Inner manipur','263632','Bharatiya Janata Party','DR RAJKUMAR RANJAN SINGH'],['Manipur','Outer manipur','363527','Naga Peoples Front','Lorho S. Pfoze'],['Meghalaya','Shillong','419689','Indian National Congress','VINCENT H. PALA'],['Meghalaya','Tura','304455','National Peoples Party','AGATHA K. SANGMA']]),columns = ['State','Constituency','Votes','Party','Candidate'])
+    >>> getStateGovernments1 = pd.DataFrame(np.array([['Manipur','Inner manipur','263632','Bharatiya Janata Party',
+    ... 'DR RAJKUMAR RANJAN SINGH'],['Manipur','Outer manipur','363527','Naga Peoples Front','Lorho S. Pfoze'],
+    ... ['Meghalaya','Shillong','419689','Indian National Congress','VINCENT H. PALA'],['Meghalaya','Tura','304455',
+    ... 'National Peoples Party','AGATHA K. SANGMA']]),columns = ['State','Constituency','Votes','Party','Candidate'])
     >>> getStateGovernments(getStateGovernments1)
            State                     Party   Votes
     2  Meghalaya  Indian National Congress  419689
     1    Manipur        Naga Peoples Front  363527
 
-    >>> getStateGovernments2 = pd.DataFrame(np.array([['Manipur','Inner manipur','Bharatiya Janata Party','DR RAJKUMAR RANJAN SINGH'],['Manipur','Outer manipur','Naga Peoples Front','Lorho S. Pfoze'],['Meghalaya','Shillong','Indian National Congress','VINCENT H. PALA'],['Meghalaya','Tura','National Peoples Party','AGATHA K. SANGMA']]),columns = ['State','Constituency','Party','Candidate'])
+    >>> getStateGovernments2 = pd.DataFrame(np.array([['Manipur','Inner manipur','Bharatiya Janata Party',
+    ... 'DR RAJKUMAR RANJAN SINGH'],['Manipur','Outer manipur','Naga Peoples Front','Lorho S. Pfoze'],
+    ... ['Meghalaya','Shillong','Indian National Congress','VINCENT H. PALA'],['Meghalaya','Tura','National Peoples Party'
+    ... ,'AGATHA K. SANGMA']]),columns = ['State','Constituency','Party','Candidate'])
     >>> getStateGovernments(getStateGovernments2)
     Traceback (most recent call last):
     pandas.core.base.SpecificationError: Column(s) ['Votes'] do not exist
@@ -69,27 +79,31 @@ def getStateVaccineRecords(stateVaccines: pd.DataFrame) -> pd.DataFrame:
     :param stateVaccines: Dataframe with vaccine data statewise.
     :return: Dataframe with sates and corresponding number of individuals vaccinated as per latest updated date.
 
-    >>> getStateVaccineRecords1 = pd.DataFrame(np.array([['20/04/2021','Manipur','109878'],['21/04/2021','Manipur','114345'],['20/04/2021','Sikkim','146868'],['21/04/2021','Sikkim','147787']]),columns = ['Updated On','State','Total Individuals Registered'])
+    >>> getStateVaccineRecords1 = pd.DataFrame(np.array([['20/04/2021','Manipur','109878'],
+    ... ['21/04/2021','Manipur','114345'],['20/04/2021','Sikkim','146868'],['21/04/2021','Sikkim','147787']]),
+    ... columns = ['Updated On','State','Total Individuals Registered'])
     >>> getStateVaccineRecords(getStateVaccineRecords1)
        index Updated On    State Total Individuals Registered
     0      1 2021-04-21  Manipur                       114345
     1      3 2021-04-21   Sikkim                       147787
 
-    >>> getStateVaccineRecords2 = pd.DataFrame(np.array([['Manipur','109878'],['Manipur','114345'],['Sikkim','146868'],['Sikkim','147787']]),columns = ['State','Total Individuals Registered'])
+    >>> getStateVaccineRecords2 = pd.DataFrame(np.array([['Manipur','109878'],['Manipur','114345'],['Sikkim','146868'],
+    ... ['Sikkim','147787']]),columns = ['State','Total Individuals Registered'])
     >>> getStateVaccineRecords(getStateVaccineRecords2)
     Traceback (most recent call last):
     KeyError: 'Updated On'
     """
-    stateVaccines = cleanData(stateVaccines)
     stateVaccines = stateVaccines.loc[stateVaccines['State'] != 'India']
-    stateVaccines['Updated On'] = pd.to_datetime(stateVaccines['Updated On'], infer_datetime_format=True)
-    latestVaccineInfo = stateVaccines.sort_values(['Updated On'], ascending=False)
+    stateVaccine = stateVaccines.copy()
+    stateVaccine.dropna(inplace=True)
+    stateVaccine['Updated On'] = pd.to_datetime(stateVaccine['Updated On'], infer_datetime_format=True)
+    latestVaccineInfo = stateVaccine.sort_values(['Updated On'], ascending=False)
     latestVaccineInfo = latestVaccineInfo.drop_duplicates(subset=['State'], keep='first')
     latestVaccineInfo = latestVaccineInfo.reset_index()
     return latestVaccineInfo
 
 
-def calcVaccinationRate(Total_Individuals_Vaccinated: float, Population_2019: float)-> float:
+def calcVaccinationRate(Total_Individuals_Vaccinated: float, Population_2019: float) -> float:
     """
     The purpose of this function is to calculate the VaccineRate in each state by finding the ratio of Total Individuals Vaccinated and Population.
     :param Total_Individuals_Vaccinated: Number of individuals vaccinated
@@ -105,7 +119,7 @@ def calcVaccinationRate(Total_Individuals_Vaccinated: float, Population_2019: fl
     Traceback (most recent call last):
     ZeroDivisionError: division by zero
     """
-    VaccinationRate = (Total_Individuals_Vaccinated / Population_2019) * 100
+    VaccinationRate = (float(Total_Individuals_Vaccinated) / float(Population_2019)) * 100
     return VaccinationRate
 
 
@@ -118,10 +132,23 @@ def calcRateOfVaccination(vaccineRecords: pd.DataFrame, statePop: pd.DataFrame,
     :param stateGovernments: Election data
     :return: Tuple with two dataframes consisting of vaccination rates.
 
-    >>> stateGovernments1 = pd.DataFrame(np.array([['Manipur','Inner manipur','Bharatiya Janata Party','DR RAJKUMAR RANJAN SINGH'],['Meghalaya','Shillong','Indian National Congress','VINCENT H. PALA']]),columns = ['State','Constituency','Party','Candidate'])
-    >>> statPop1 = pd.DataFrame(np.array([['Meghalaya',3366710.0,2966889],['Manipur',3091545.0,2855794]]), columns = ['State','Population_2019','Population_2011'])
-    >>> vaccineRecords1 = pd.DataFrame(np.array([['20/04/2021','Manipur','109878','11400','108','109878','52226','73805','36068','5','0','162104',109878.0,162104,],['20/04/2021','Meghalaya','133716','29000','260','133716','46932','68644','65059','13','0','180648',133716.0,180648]]), columns = ['Updated On','State','Total Individuals Registered','Total Sessions Conducted','Total Sites','First Dose Administered','Second Dose Administered','Male(Individuals Vaccinated)','Female(Individuals Vaccinated)','Transgender(Individuals Vaccinated)','Total Covaxin Administered','Total CoviShield Administered','Total Individuals Vaccinated','Total Doses Administered'])
+    >>> stateGovernments1 = pd.DataFrame(np.array([['Manipur','Inner manipur','Bharatiya Janata Party',
+    ... 'DR RAJKUMAR RANJAN SINGH'],['Meghalaya','Shillong','Indian National Congress','VINCENT H. PALA']]),
+    ... columns = ['State','Constituency','Party','Candidate'])
+    >>> statPop1 = pd.DataFrame(np.array([['Meghalaya',3366710.0,2966889],['Manipur',3091545.0,2855794]]),
+    ... columns = ['State','Population_2019','Population_2011'])
+    >>> vaccineRecords1 = pd.DataFrame(np.array([['20/04/2021','Manipur',109878.0,162104,],
+    ... ['20/04/2021','Meghalaya',133716.0,180648]]), columns = ['Updated On','State','Total Individuals Vaccinated','Total Doses Administered'])
     >>> calcRateOfVaccination(vaccineRecords1,statPop1,stateGovernments1)
+    (                      Party  ... VaccinationRate
+    0    Bharatiya Janata Party  ...        3.554145
+    1  Indian National Congress  ...        3.971711
+    <BLANKLINE>
+    [2 rows x 4 columns],        State Population_2019  ... Total Individuals Vaccinated VaccinationRate
+    0  Meghalaya       3366710.0  ...                     133716.0        3.971711
+    1    Manipur       3091545.0  ...                     109878.0        3.554145
+    <BLANKLINE>
+    [2 rows x 5 columns])
     """
     vaccinePopulation = statePop[['State', 'Population_2019']].merge(
                         vaccineRecords[['Updated On', 'State', 'Total Individuals Vaccinated']], on='State')
@@ -152,6 +179,34 @@ def stateClassificationByRulingParty(stateGovernments: pd.DataFrame, rateOfVacci
     return vaccinationRate_by_rulingParty
 
 
+def is_ipython():
+    try:
+        if get_ipython() == None:
+            return False
+        return True
+    except NameError:
+        return False
+
+
+def plot(y, df):
+    """
+    This function is used to create the bar plot for States within each party vs vaccination rate.
+    :param y: Title for y axis.
+    :param df: Dataframe
+    """
+    fig = px.bar(df, x='Party', y=y, log_y=True, title='Vaccination per Political Party',
+                 hover_name='Party',
+                 hover_data={'a': [numerize.numerize(x, 0) for x in df.Population_2019.tolist()],
+                             'tiv': [numerize.numerize(x, 0) for x in df['Total Individuals Vaccinated'].tolist()],
+                             'vr': [round(x, 2) for x in df['VaccinationRate'].tolist()],
+                             y: False, 'VaccinationRate': False, 'Party': False, 'Population_2019': False},
+                 labels={'a': 'population', 'tiv': '# vaccinated', 'vr': '% vaccinated'},
+                 color='Population_2019',
+                 color_continuous_scale='darkmint')
+    fig.update_layout(plot_bgcolor='white')
+    fig.show()
+
+
 def hypothesis1(electionData, vaccineData, populationData):
     """
     This function consists of all the steps required for Hypothesis 1.
@@ -160,9 +215,9 @@ def hypothesis1(electionData, vaccineData, populationData):
     :param vaccineData: Dataframe with vaccination records for each state in India.
     :param populationData: Dataframe with population in each state as of 2019.
     """
-
-    # CLeaning the data to have uniform names of states across the input files.
-    statePopulation = cleanData(populationData)
+    print("#########################################################################################################")
+    print("                                            HYPOTHESIS 1                                                ")
+    print("#########################################################################################################")
 
     # Fetching the currently ruling parties in each state of India.
     stateGovernments = getStateGovernments(electionData)
@@ -171,187 +226,127 @@ def hypothesis1(electionData, vaccineData, populationData):
     stateVaccineRecords = getStateVaccineRecords(vaccineData)
 
     # Calculating the rate of vaccination in each state.
-    rateOfVaccination_vs_party = calcRateOfVaccination(stateVaccineRecords, statePopulation, stateGovernments)
+    rateOfVaccination_vs_party = calcRateOfVaccination(stateVaccineRecords, populationData, stateGovernments)
 
-    # Plotting bar plot for States within each party vs vaccination rate.
-    drp_dwn = widgets.Dropdown(value='Total Individuals Vaccinated',
-                               options=[('# vaccinated', 'Total Individuals Vaccinated'),
-                                        ('% vaccinated', 'VaccinationRate')])
-
-    @interact(y=drp_dwn)
-    def plot(y):
-        fig = px.bar(rateOfVaccination_vs_party[0], x='Party', y=y, log_y=True, title='Vaccination per Political Party',
-                     hover_name='Party',
-                     hover_data={'a': [numerize.numerize(x, 0) for x in
-                                       rateOfVaccination_vs_party[0].Population_2019.tolist()],
-                                 'tiv': [numerize.numerize(x, 0) for x in
-                                         rateOfVaccination_vs_party[0]['Total Individuals Vaccinated'].tolist()],
-                                 'vr': [round(x, 2) for x in
-                                        rateOfVaccination_vs_party[0]['VaccinationRate'].tolist()],
-                                 y: False,
-                                 'VaccinationRate': False,
-                                 'Party': False,
-                                 'Population_2019': False},
-                     labels={'a': 'population',
-                             'tiv': '# vaccinated',
-                             'vr': '% vaccinated'},
-                     color='Population_2019',
-                     color_continuous_scale='darkmint')
-        fig.update_layout(plot_bgcolor='white')
-        fig.show()
+    if is_ipython():
+        # Plotting bar plot for States within each party vs vaccination rate.
+        drp_dwn = widgets.Dropdown(value='Total Individuals Vaccinated',
+                                   options=[('# vaccinated', 'Total Individuals Vaccinated'),
+                                            ('% vaccinated', 'VaccinationRate')])
+        interact(plot, y=drp_dwn, df=fixed(rateOfVaccination_vs_party[0]))
+    else:
+        plot('Total Individuals Vaccinated', rateOfVaccination_vs_party[0])
+        plot('VaccinationRate', rateOfVaccination_vs_party[0])
 
     # Classifying the states by ruling parties.
     vaccinationRate_by_rulingParty = stateClassificationByRulingParty(stateGovernments, rateOfVaccination_vs_party[1])
 
-    # Plotting bar graph for States vs Vaccination rate and coloring the bar plot to represent the ruling party.
-    fig, ax = plt.subplots(figsize=(100, 30))
-    for key, grp in vaccinationRate_by_rulingParty.groupby(['Party']):
-        ax.bar(grp['State'], grp['VaccinationRate'], label=key)
+    # plotting bar bar graph for States vs Vaccination rate and coloring the bar plot to represent the ruling party.
+    fig = px.bar(vaccinationRate_by_rulingParty, x='State', y='VaccinationRate', hover_name='Party',
+                 color='Party', color_discrete_sequence=px.colors.sequential.Plasma_r)
+    fig.update_xaxes(tickangle=45)
+    fig.show()
 
-    for label in (ax.get_xticklabels() + ax.get_yticklabels()):
-        label.set_fontsize(55)
-    ax.legend(loc=2, prop={'size': 40})
-    ax.tick_params(axis='x', labelrotation=90)
-    plt.title(label="States Vs Vaccination Rates",
-              fontsize=95)
-    plt.xlabel('States', fontsize=55)
-    plt.ylabel('Vaccination Rates', fontsize=55)
-    plt.show()
+
+def fix_timeseries(grp, cols):
+    """
+    This function is used to interpolate the mssing data for testing, positive cases and number of vaccinations.
+    :param grp: DataFrame.
+    :param cols: column names to be ranked.
+    :return: dataframe with fixed values.
+    """
+    grp = grp.drop_duplicates('Updated On')
+    grp = grp.set_index('Updated On')
+    grp = grp[cols].resample('D').asfreq().interpolate().round()
+    return grp
 
 
 def getTestGrouped(testData: pd.DataFrame) -> pd.DataFrame:
     """
     Combines number of tests conducted and positive cases for each day recorded in dataset for every state.
     :param testData: Data frame consisting of the COVID-19 testing data for each state.
-    :return: Creates a dataframe having total number of tests conducted and positive cases for each day recorded in
-    India.
+    :return: Creates a dataframe having total number of tests conducted and positive cases for each day recorded in India.
     """
-    testingTotal = testData.groupby(['Updated On']).agg({'Total Tested': 'sum'})
-    testingTotal = testingTotal.reset_index()
+    cols = ['Total Tested']
+    stateTesting['Updated On'] = pd.to_datetime(stateTesting['Updated On'], infer_datetime_format= True)
+    # Clean data by interpolating missing values
+    cleaned_data = stateTesting[['Updated On', 'State', 'Total Tested']].groupby('State')\
+                            .apply(fix_timeseries, cols = cols)
 
-    testingPositive = testData.groupby(['Updated On']).agg({'Positive': 'sum'})
-    testingPositive = testingPositive.reset_index()
+    # Combine values for all states to get a nation aggregate
+    unified_test = cleaned_data.groupby('Updated On')[cols].sum().reset_index()
+    unified_test['State'] = 'India'
+    unified_test = unified_test.set_index('Updated On')
+    unified_test = unified_test.resample('D').asfreq()
+    unified_test_daily = unified_test.copy(deep = True)
+    unified_test_daily[cols] = unified_test_daily[cols].diff(1)
 
-    testGrouped = testingTotal.merge(testingPositive, on='Updated On')
-
-    return testGrouped
+    return unified_test_daily
 
 
-def getTotalDailyVaccinated(vaccination: pd.DataFrame) -> pd.DataFrame:
+def getDailyPositives(positives: pd.DataFrame) -> pd.DataFrame:
+    """
+    Combines number of positive cases for each day.
+    :param positives: Dataframe consisting of number of positives cases in incremental manner.
+    :return: Dataframe having total number of positive cases vaccinated for each day.
+    """
+    positives = positives.rename(columns={'Date_YMD': 'Updated On', 'Total Confirmed': 'Positive'})
+    positives = positives.loc[:, ['Updated On', 'Positive']]
+    positives = fix_timeseries(positives, ['Positive'])
+    positives_daily = positives.copy(deep=True)
+    positives_daily['Positive'] = positives_daily['Positive'].diff(1)
+
+    return positives_daily
+
+
+def getTotalDailyVaccinated(stateVaccinations: pd.DataFrame) -> pd.DataFrame:
     """
     Combines number of individuals vaccinated for each day across all the states.
     :param vaccination: Dataframe consisting of vaccination records for each state.
     :return: Dataframe having total number of individuals vaccinated for each day recorded.
     """
-    vaccination_ = vaccination.copy()
-    vaccination_['Updated On'] = pd.to_datetime(vaccination_['Updated On'], infer_datetime_format=True)
-    vaccineCombined = vaccination_.groupby(['Updated On']).agg({'Total Individuals Vaccinated': 'sum'})
-    vaccineCombined = vaccineCombined.reset_index()
+    cols = ['First Dose Administered', 'Second Dose Administered', 'Total Individuals Vaccinated']
+    stateVaccinations['Updated On'] = pd.to_datetime(stateVaccinations['Updated On'], infer_datetime_format = True)
+    unified_vacc = stateVaccinations.loc[stateVaccinations.State == 'India']
+    unified_vacc = fix_timeseries(unified_vacc, cols)
+    unified_vacc_daily = unified_vacc.copy(deep = True)
+    unified_vacc_daily[cols] = unified_vacc_daily[cols].diff(1)
 
-    return vaccineCombined
-
-
-def plotHypo2(testingVsVaccinated: pd.DataFrame, title: str):
-    """
-    This functions creates all the three plots required for the hypothesis 2.
-    :param testingVsVaccinated: Dataframe consisting of testing & vaccination details for each date across different states.
-    :param title: String which is used as title of the plots.
-    """
-    fig = go.Figure()
-    if "before" in title:
-        fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Total Tested'],
-                                 mode='lines',
-                                 name='Total Tests Conducted'))
-
-        fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Positive'],
-                                 mode='lines',
-                                 name='Total Positive Cases'))
-
-    else:
-        fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Total Tested'],
-                                 mode='lines',
-                                 name='Total Tests Conducted'))
-
-        fig.add_trace(
-            go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Total Individuals Vaccinated'],
-                       mode='lines',
-                       name='Total Individuals Vaccinated'))
-
-        fig.add_trace(go.Scatter(x=testingVsVaccinated['Updated On'], y=testingVsVaccinated['Positive'],
-                                 mode='lines',
-                                 name='Total Positive Cases'))
-    fig.update_layout(
-        title={
-            'text': title,
-            'y': 0.9,
-            'x': 0.4,
-            'xanchor': 'center',
-            'yanchor': 'top'},
-        xaxis_title="Time",
-        yaxis_title="Rates",
-    )
-
-    fig.show()
+    return unified_vacc_daily
 
 
-def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame):
+def hypothesis2(testingData: pd.DataFrame, vaccinesData: pd.DataFrame, IndPositives: pd.DataFrame):
     """
     This function consists of all the steps required for Hypothesis 1.
     All the function calls for Hypothesis 1 are made from this function.
     :param testingData: Data frame consisting of the COVID-19 testing data for each state.
     :param vaccinesData: Dataframe consisting of vaccination records for each state.
+    :param IndPositives: Dataframe consisting of daily positive cases in India.
     """
 
     print("#########################################################################################################")
     print("                                            HYPOTHESIS 2                                                 ")
     print("#########################################################################################################")
 
-    testingData['Updated On'] = pd.to_datetime(testingData['Updated On'], infer_datetime_format=True)
+    unified_test_daily = getTestGrouped(testingData)
+    positives_daily = getDailyPositives(IndPositives)
+    unified_vacc_daily = getTotalDailyVaccinated(vaccinesData)
 
-    # Lets first check the trend in COVID-19 testing before vaccinations began.
-    testData = testingData.drop(testingData[testingData['Updated On'].dt.year == 2021].index)
-    testbeforevaccine = getTestGrouped(testData)
-    plotHypo2(testbeforevaccine, "Testing conducted before vaccinations")
+    cols = ['Total Tested', 'Positive', 'First Dose Administered', 'Second Dose Administered', 'Total Individuals Vaccinated']
+    unified_df = unified_test_daily.merge(unified_vacc_daily, how = 'left', on = 'Updated On')
+    unified_df = unified_df.merge(positives_daily, how = 'left', on = 'Updated On')
 
-    testingData.drop(testingData[testingData['Updated On'].dt.year != 2021].index, inplace = True)
-    # Fetching total number of tests conducted each day across different states.
-    testingGrouped = getTestGrouped(testingData)
-    # Fetching total number individuals vaccinated each day across different states.
-    vaccineGrouped = getTotalDailyVaccinated(vaccinesData)
+    unified_df_rolling = unified_df.copy(deep = True)
+    unified_df_rolling[cols] = unified_df_rolling[cols].rolling(7).mean().round()
+    unified_df_rolling = unified_df_rolling.reset_index()
 
-    # Merging the testing and vaccination details for creating plot for overall tests conducted after vaccination began.
-    testingVsVaccinated = vaccineGrouped.merge(testingGrouped, on='Updated On')
+    melt = unified_df_rolling.melt(id_vars='Updated On', value_vars=cols)
+    fig = px.line(melt, x = 'Updated On', y = 'value', color = 'variable')
 
-    # Fetching the records for 1st shot of vaccinations only.
-    vaccine_1st_shot = vaccinesData.loc[vaccinesData['Second Dose Administered'] == 0]
-    # Fetching the records for 2nd shot of vaccinations only.
-    vaccine_2nd_shot = vaccinesData.loc[vaccinesData['Second Dose Administered'] != 0]
-
-    # Fetching total number individuals who got first shot each day across different states.
-    vaccine_1st_grouped = getTotalDailyVaccinated(vaccine_1st_shot)
-    # Fetching total number individuals who got second shot each day across different states.
-    vaccine_2nd_grouped = getTotalDailyVaccinated(vaccine_2nd_shot)
-
-    first_shot_date = vaccine_1st_grouped['Updated On'].max()
-    second_shot_date = vaccine_2nd_grouped['Updated On'].min()
-
-    # Fetching the records for tests conducted after 1st shot and before the second shots started.
-    test_after_1st_shot = testingGrouped.loc[testingGrouped['Updated On'] <= first_shot_date]
-    # Fetching the records for tests conducted after 2nd shots were started.
-    test_after_2nd_shot = testingGrouped.loc[testingGrouped['Updated On'] >= second_shot_date]
-
-    # Merging the testing & vaccination details for creating a plot for test conducted after first shot of vaccination.
-    testingVsVaccinated_1st = vaccine_1st_grouped.merge(test_after_1st_shot, on = 'Updated On')
-    # Merging the testing $ vaccination details for creating a plot for test conducted after second shot of vaccination.
-    testingVsVaccinated_2nd = vaccine_2nd_grouped.merge(test_after_2nd_shot, on = 'Updated On')
-
-    # Creating all three plots.
-    plotHypo2(testingVsVaccinated, "No. of individuals vaccinated Vs Tests Conducted")
-    plotHypo2(testingVsVaccinated_1st, "No. of individuals given first shot Vs Tests Conducted after first shot")
-    plotHypo2(testingVsVaccinated_2nd, "No. of individuals given second shot Vs Tests Conducted after second shot")
+    fig.show()
 
 
-def getVaccineTypeCount (vaccinesTypeData : pd.DataFrame):
+def getVaccineTypeCount(vaccinesTypeData : pd.DataFrame):
     """
     This function calculates the number of shots administered for each type of vaccine in each state.
     :param vaccinesTypeData: Dataframe consisting of data for each type of vaccine
@@ -372,11 +367,10 @@ def getVaccineTypeCount (vaccinesTypeData : pd.DataFrame):
 
 def rank_(grp, col, return_rank=None):
     """
-    This function is used to find the rank of the state based on daily distribution of each type of vaccine.
-    :param grp:
-    :param col:
-    :param return_rank:
-    :return:
+    This function is used find the rank of the state based on daily distribution of each type of vaccine.
+    :param grp: Dataframe
+    :param col: Column based on which the ranked has to be calculated.
+    :return: States with their ranks.
 
     >>> df = pd.DataFrame(np.array([['2021-01-16', 'Delhi', 23.0, 0.0, 23.0], ['2021-01-16', 'Punjab', 25.0, 1.0, 24.0],
     ... ['2021-01-16', 'Gujrat', 35.0, 6.0, 29.0], ['2021-01-16', 'Maharashtra', 40.0, 6.0, 34.0]]),
@@ -415,12 +409,6 @@ def hypothesis3(testingData3: pd.DataFrame):
             'yanchor': 'top'},
         xaxis_title="State",
         yaxis_title="Count of vaccine administered",
-        # xaxis = dict(
-        # tickfont=dict(color="#ff7f0e"),
-        # tickmode = 'array',
-        # tickvals = [19, 31],
-        # ticktext = ['Maharashtra', 'Telangana']
-        # )
 
     )
     plot.show()
@@ -465,7 +453,7 @@ def hypothesis3(testingData3: pd.DataFrame):
 
 if __name__ == '__main__':
 
-    #Loading all the input files for Hypothesis 1
+    # Loading all the input files for Hypothesis 1
     stateElections = pd.read_csv("./StateElectionData.csv")
     stateVaccinations = pd.read_csv("./covid_vaccine_statewise.csv")
     statePopulation = pd.read_csv("./statePopulationIndia.csv")
@@ -478,17 +466,19 @@ if __name__ == '__main__':
     statePopulation = cleanData(statePopulation)
 
     # Performing analysis for Hypothesis 1
-    stateGovt = hypothesis1(stateElections, stateVaccinations, statePopulation)
+    hypothesis1(stateElections, stateVaccinations, statePopulation)
 
     # Loading all the input files for Hypothesis 2
-    stateTesting = pd.read_csv("./statewise_tested_numbers_data.csv")
+    stateTesting = pd.read_csv("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv")
+    # Loading file for Hypothesis 3
+    India_positives = pd.read_csv('https://api.covid19india.org/csv/latest/case_time_series.csv',
+                                  parse_dates=['Date_YMD'])
 
     # CLeaning all the files for Hypothesis 2
     stateTesting = cleanData(stateTesting)
 
     # Performing analysis for Hypothesis 2
-    hypothesis2(stateTesting, stateVaccinations, stateGovt)
-
+    hypothesis2(stateTesting.copy(deep=True), stateVaccinations, India_positives)
 
     # Grouping all the data for Hypothesis 3
     groupedVaccineTypeData = getVaccineTypeCount(stateVaccinations)
