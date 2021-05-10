@@ -42,7 +42,7 @@ Thus, <em> we can accept the alternate hypothesis </em> that the governing body/
 
 ## Hypothesis 2
 
-Conducting a test to see if the availability of vaccine has had any impact on number of Covid-19 tests being performed.
+Conducting a test to see if the availability of vaccine has any influence on number of Covid-19 tests being performed.
 
 H0 : Administration of vaccine has impacted the number of Covid-19 tests being conducted(increased or decreased).<br>
 HA : Vaccine had no impact on the number of Covid-19 tests being conducted.
@@ -66,38 +66,44 @@ HA : Accessibility to vaccine in any state is not dependent on the political rel
 ## The plots belows represents the top consumers(states) of Covaxin and CoviShield
 
 ![image](https://user-images.githubusercontent.com/77983551/117613761-fdd1e200-b12c-11eb-9b92-4628be057ce7.png)
-The above chart represents the number of days for which each state was in the top 3 consumers of CoviShield. 
+The above chart represents the number of days for which each state was in the top 3 consumers of CoviShield. <br> <br>
 
 
 ![image](https://user-images.githubusercontent.com/77983551/117613834-180bc000-b12d-11eb-83a3-f2e8ded24d19.png)
 The above chart represents the number of days for which each state was the top consumer of CoviShield. <br>
 Maharashtra topped the list for 40% of days.<br>
 Rajasthan topped the list for 16.5% of days.<br>
-Uttar Pradesh topped the list for 33.9% of days.<br>
+Uttar Pradesh topped the list for 33.9% of days.<br><br>
 
 
 ![image](https://user-images.githubusercontent.com/77983551/117613904-2e198080-b12d-11eb-893b-513e098809f3.png)
-The above chart represents the number of days for which each state was in the top 3 consumers of Covaxin.
+The above chart represents the number of days for which each state was in the top 3 consumers of Covaxin.<br><br>
 
 
 ![image](https://user-images.githubusercontent.com/77983551/117613985-48535e80-b12d-11eb-93a7-7441b990d3a7.png)
 The above chart represents the number of days for which each state was the top consumer of Covaxin. <br>
 Maharashtra topped the list for 40.9% of days.<br>
 Gujarat topped the list for 45.2% of days.<br>
-Odisha topped the list for 9.57% of days.<br>
+Odisha topped the list for 9.57% of days.<br><br>
+
+Covaxin produced in Telangana (Ruling Party - Bharatiya Janata party)<br>
+CoviShield produced in Maharashtra (Ruling Party - Bharatiya Janata party)<br>
+
+Thus from the above analysis and from the plot 3 of Hypothesis 1, we can see that the distribution of Covaxin and CoviShield in a particular state is independent of the political relations of the states with the state producing these vaccines. The reason for this is that even the states with ruling party apart from Bharatiya Janata party have topped the list for sevral number of days in the distribution of both CoviShield and Covaxin (Eg. Odisha, Andhra Pradesh, West Bengal).<br>
+Hence, <em> we accept the alteranate hypothesis </em>.
 
 
 ## Datasets Used
 
 India Elections:
 
-https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/26526
-https://www.kaggle.com/awadhi123/indian-election-dataset
+https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/26526 <br>
+https://www.kaggle.com/awadhi123/indian-election-dataset<br>
 
 Covid-19 Vaccination: 
 
-https://www.kaggle.com/gpreda/covid-world-vaccination-progress
-https://www.kaggle.com/sudalairajkumar/covid19-in-india?select=covid_vaccine_statewise
+https://www.kaggle.com/gpreda/covid-world-vaccination-progress <br>
+https://www.kaggle.com/sudalairajkumar/covid19-in-india?select=covid_vaccine_statewise <br>
 
 
 
