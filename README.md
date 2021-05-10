@@ -23,7 +23,8 @@ HA : No effect of governing body/party on the distribution of vaccination.
 
 We first classified the states based on the political party currently in power. Then we calculated the rate of vaccinations by dividing total number of individuals vaccinated  by total population of states falling under each political party.
 
-Below is the plot for each statewise ruling party vs total individuals vaccinated.
+##<b>Below is the plot for each statewise ruling party vs total individuals vaccinated.<b>
+
 ![image](https://user-images.githubusercontent.com/77983551/117612984-c0208980-b12b-11eb-820a-328c53c7690c.png)
 
 Below is the plot for each statewise ruling party vs vaccination rate.
